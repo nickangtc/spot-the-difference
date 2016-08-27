@@ -2,15 +2,13 @@ body {
   font-size: 2em;
   background-color: #E4D6A6;
 }
+span {
+  margin: -3px;
+}
 
 /**************/
 /* GAMEPLAY IMAGES START */
-.img-fit {
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 600px;
-}
+
 
 .img1a {
   background-image: url('../img/img1a.jpg');
@@ -24,9 +22,42 @@ body {
 .img2b {
   background-image: url('../img/img2b.jpg');
 }
-
 /* END */
 /**************/
+.img-fit {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 600px;
+  width: 400px;
+  border: 1px black solid;
+}
+.pixel {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  /*border: 1px solid yellow;*/
+}
+.pixel:hover {
+  background-color: lightgrey;
+}
+.selected-circle {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url('../img/circle3.png');
+}
+
+/* Modifying Bootstrap */
+.row.no-gutter {
+  margin-left: 0;
+  margin-right: 0;
+}
+.row.no-gutter [class*='col-']:not(:first-child),
+.row.no-gutter [class*='col-']:not(:last-child) {
+  padding-right: 0;
+  padding-left: 0;
+}
 
 #ui-bar {
   background-color: #A0BA68;
