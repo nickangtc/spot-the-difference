@@ -13,12 +13,17 @@ body {
 }
 
 .img1a {
-  background-image: url('../img/img1.jpg');
+  background-image: url('../img/img1a.jpg');
 }
 .img1b {
-  background-image: url('../img/img2.jpg');
+  background-image: url('../img/img1b.jpg');
 }
-
+.img2a {
+  background-image: url('../img/img2a.jpg');
+}
+.img2b {
+  background-image: url('../img/img2b.jpg');
+}
 
 /* END */
 /**************/
