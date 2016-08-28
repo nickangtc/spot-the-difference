@@ -14,13 +14,18 @@ $(document).ready(function () {
     answerIndex: [10, 20, 30, 40, 50]
   };
 
-  // !--- GAME LOGIC ---! //
+  // --- INITALISE GAME ---
 
   // Generate click listeners for game 'pixels'.
   for (var i = 1; i <= 150; i++) {
     $('#pix-l-' + i).on('click', playTurn);
     $('#pix-r-' + i).on('click', playTurn);
   }
+
+  // Start timer
+  timer('start');
+
+  // !--- GAME LOGIC ---! //
 
   // ---- Main control-flow function ----
   // executes when any pixel is clicked.
@@ -56,7 +61,16 @@ $(document).ready(function () {
   // 'start' / 'stop' timer
   // 'add time for time extension
   function timer (option) {
-
+    if (option === 'start') {
+      TIMER_ID = setInterval(function () {
+        $('#time-digits').text(TIME_LEFT);
+        TIME_LEFT--;
+      }, 1000);
+    } else if (option === 'stop') {
+      clearInterval(TIMER_ID);
+    } else if (option === 'add') {  // used when user activates help-time
+      TIME_LEFT += 10;
+    }
   }
 
   function restart () {}
