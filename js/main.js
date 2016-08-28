@@ -63,8 +63,17 @@ $(document).ready(function () {
   function timer (option) {
     if (option === 'start') {
       TIMER_ID = setInterval(function () {
+        var percentage = TIME_LEFT + '%';
+        $('#time-bar').css('width', percentage);
         $('#time-digits').text(TIME_LEFT);
         TIME_LEFT--;
+        if (TIME_LEFT === 20) {
+          $('#time-bar').toggleClass('progress-bar-warning');
+          $('#time-bar').toggleClass('progress-bar-danger');
+        }
+        if (TIME_LEFT < 0) {
+          clearInterval(TIMER_ID);
+        }
       }, 1000);
     } else if (option === 'stop') {
       clearInterval(TIMER_ID);

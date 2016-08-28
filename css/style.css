@@ -57,9 +57,13 @@ span {
   padding-right: 0;
   padding-left: 0;
 }
+/*.progress {
+  margin-top: 2%;
+}*/
 
 #ui-bar {
   background-color: #A0BA68;
+  padding-top: 1.5%;
 }
 #game-stage {
   /*background-color: #449651;*/
