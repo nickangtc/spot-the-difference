@@ -7,6 +7,9 @@ $(document).ready(function () {
   var TIME_LEFT = 99;
   var GAME_OVER = false;
   var CUR_IMG_IND = 0;
+  var SCORE = 0;
+  var ASSIST_TIME_CREDITS = 3;
+  var ASSIST_CLUE_CREDITS = 3;
 
   var img1 = {
     answerIndex: [10, 20, 30, 40, 50],
@@ -21,17 +24,29 @@ $(document).ready(function () {
     cssClass: 'img3'
   };
 
-  // Stores all previously declared img vars.
+  // Stores all previously the above img objects.
   var IMAGES = [img1, img2, img3];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
 
   // --- INITALISE GAME ---
 
+  // CLICK LISTENERS
   // Generate click listeners for game 'pixels'.
   for (var i = 1; i <= 150; i++) {
     $('#pix-l-' + i).on('click', playTurn);
     $('#pix-r-' + i).on('click', playTurn);
   }
+  // Click listeners for Help buttons
+  $('#help-clue').on('click', useClue);
+  $('#help-time').on('click', function () {
+    if (ASSIST_TIME_CREDITS > 0) {
+      timer('add');
+      ASSIST_TIME_CREDITS--;
+      $(this).text(ASSIST_TIME_CREDITS);
+    } else if (ASSIST_TIME_CREDITS === 0) {
+      // update user msg "curious, time machine failed!"
+    }
+  });
 
   // Start timer
   timer('start');
@@ -48,9 +63,13 @@ $(document).ready(function () {
     if (correctPixelSelected) {
       $('#' + element.id).addClass('selected-circle');
       dittoClick(element); // execute ONLY if choice is right
-    } else if (!correctPixelSelected) {
-      // make 'X' img fade in and out
+      incrementScore();
+    }
+    if (!correctPixelSelected) {
+      // make 'X' img appear and fade out
+      // play salah sound
       // maybe vibrate the page too
+      timer('penalty');
     }
     setTimeout(function () { // TESTING
       doImg('new');
@@ -63,13 +82,12 @@ $(document).ready(function () {
       if (option === 'new') {
         // OLD MANAGEMENT - Update javascript variables:
         var oldImgObj = IMAGES[CUR_IMG_IND];
+        console.log('old image object: ', oldImgObj);
         IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
         IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
         // NEW MANAGEMENT
-        console.log('new images length: ', IMAGES.length);
         var randNum = randomIntFromInterval(0, IMAGES.length - 1);
         CUR_IMG_IND = randNum; // randomly select new image to serve
-        console.log('random number: ', randNum);
         var newImgObj = IMAGES[CUR_IMG_IND];
         console.log('new image object: ', newImgObj);
         serveNewImg(newImgObj); // removes old image, adds new one
@@ -105,6 +123,12 @@ $(document).ready(function () {
         $('#left-pane').addClass(imgObject.cssClass + 'a');
         $('#right-pane').addClass(imgObject.cssClass + 'b');
       }
+    }
+
+    function incrementScore () {
+      var amt = TIME_LEFT * 50;
+      SCORE += amt;
+      $('#score-ui').text(SCORE);
     }
 
     function isGameOver () {}
@@ -163,8 +187,12 @@ $(document).ready(function () {
       clearInterval(TIMER_ID);
     } else if (option === 'add') {  // used when user activates help-time
       TIME_LEFT += 10;
+    } else if (option === 'penalty') { // when user selects wrong pixel
+      TIME_LEFT -= 6;
     }
   }
+
+  function useClue () {}
 
   function restart () {}
 
