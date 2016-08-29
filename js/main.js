@@ -193,9 +193,13 @@ $(document).ready(function () {
         $('#time-bar').css('width', percentage);
         $('#time-digits').text(TIME_LEFT);
         TIME_LEFT--;
-        if (TIME_LEFT === 20) {
-          $('#time-bar').toggleClass('progress-bar-warning');
-          $('#time-bar').toggleClass('progress-bar-danger');
+        if (TIME_LEFT === 50) {
+          $('#time-bar').removeClass('progress-bar-success');
+          $('#time-bar').addClass('progress-bar-warning');
+        }
+        if (TIME_LEFT === 15) {
+          $('#time-bar').removeClass('progress-bar-warning');
+          $('#time-bar').addClass('progress-bar-danger');
         }
         if (TIME_LEFT < 0) {
           clearInterval(TIMER_ID);
