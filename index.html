@@ -39,8 +39,10 @@
   <!-- DO NOT CHANGE ID NAMES - strong dependencies in JS -->
   <div id="game-stage" class="row no-gutter">
     <!-- Left Picture Pane -->
-    
-    <div id="left-pane" class="col-sm-4 col-sm-offset-1 img-fit img1a">
+
+    <!-- Do not add to 'left-pane' any class name containing 'img' -->
+    <!-- // it will screw up 'doImg' function in main.js -->
+    <div id="left-pane" class="col-sm-4 col-sm-offset-1 tight-fit img1a">
       <span class="pixel" id="pix-l-1"></span>
       <span class="pixel" id="pix-l-2"></span>
       <span class="pixel" id="pix-l-3"></span>
@@ -195,7 +197,7 @@
     </div>
 
     <!-- Right Picture Pane -->
-    <div id="right-pane" class="col-sm-4 col-sm-offset-1 img-fit img1b">
+    <div id="right-pane" class="col-sm-4 col-sm-offset-1 tight-fit img1b">
       <span class="pixel" id="pix-r-1"></span>
       <span class="pixel" id="pix-r-2"></span>
       <span class="pixel" id="pix-r-3"></span>

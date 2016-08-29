@@ -1,21 +1,29 @@
+/* global $ */
+
 console.log('javascript working');
 
 $(document).ready(function () {
-
-  var TIMER_ID = "";
+  var TIMER_ID = '';
   var TIME_LEFT = 99;
   var GAME_OVER = false;
-
   var CUR_IMG_IND = 0;
+
   var img1 = {
-    answerIndex: [10, 20, 30, 40, 50]
+    answerIndex: [10, 20, 30, 40, 50],
+    cssClass: 'img1'
   };
   var img2 = {
-    answerIndex: [10, 20, 30, 40, 50]
+    answerIndex: [10, 20, 30, 40, 50],
+    cssClass: 'img2'
+  };
+  var img3 = {
+    answerIndex: [10, 20, 30, 40, 50],
+    cssClass: 'img3'
   };
 
   // Stores all previously declared img vars.
-  var IMAGES = [img1, img2];
+  var IMAGES = [img1, img2, img3];
+  var IMAGES_PLAYED = []; // img objects popped here after each round.
 
   // --- INITALISE GAME ---
 
@@ -36,6 +44,7 @@ $(document).ready(function () {
     var element = choice.target;
     console.log('clicked on: ' + element.id);
     var correctPixelSelected = isRight(element.id);
+    // Executes when correct pixel is selected by user.
     if (correctPixelSelected) {
       $('#' + element.id).addClass('selected-circle');
       dittoClick(element); // execute ONLY if choice is right
@@ -43,8 +52,60 @@ $(document).ready(function () {
       // make 'X' img fade in and out
       // maybe vibrate the page too
     }
+    setTimeout(function () { // TESTING
+      doImg('new');
+    }, 2000);
 
-    function currentChallenge () {}
+    // 2 options to manipulate images -
+    // (1) 'new': retires old image and serves new one on DOM.
+    // (2) 'check': returns current in-play image object.
+    function doImg (option) {
+      if (option === 'new') {
+        // OLD MANAGEMENT - Update javascript variables:
+        var oldImgObj = IMAGES[CUR_IMG_IND];
+        IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
+        IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
+        // NEW MANAGEMENT
+        console.log('new images length: ', IMAGES.length);
+        var randNum = randomIntFromInterval(0, IMAGES.length - 1);
+        CUR_IMG_IND = randNum; // randomly select new image to serve
+        console.log('random number: ', randNum);
+        var newImgObj = IMAGES[CUR_IMG_IND];
+        console.log('new image object: ', newImgObj);
+        serveNewImg(newImgObj); // removes old image, adds new one
+      }
+      if (option === 'check') {
+        // returns current image object
+        return IMAGES[CUR_IMG_IND];
+      }
+
+      function serveNewImg (imgObject) {
+        // 'img' argument is an object corresponding to current img in play.
+        console.log('img object in serveNewImg: ', imgObject);
+        var leftPaneClassList = document.getElementById('left-pane').classList;
+        var rightPaneClassList = document.getElementById('right-pane').classList;
+        var leftOldImgClass = '';
+        var rightOldImgClass = '';
+        // finds out name of current image class on screen
+        leftPaneClassList.forEach(function (element, index, array) {
+          if (element.includes('img')) {
+            leftOldImgClass = element;
+          }
+        });
+        rightPaneClassList.forEach(function (element, index, array) {
+          if (element.includes('img')) {
+            rightOldImgClass = element;
+          }
+        });
+        // remove old image CSS class
+        $('#left-pane').removeClass(leftOldImgClass);
+        $('#right-pane').removeClass(rightOldImgClass);
+        // add new image CSS class
+        // based on img object's 'name' key
+        $('#left-pane').addClass(imgObject.cssClass + 'a');
+        $('#right-pane').addClass(imgObject.cssClass + 'b');
+      }
+    }
 
     function isGameOver () {}
 
@@ -68,19 +129,17 @@ $(document).ready(function () {
       return false;
     }
 
-
     // Duplicates clicks on one panel on the other.
     function dittoClick (element) {
       var leftOrRight = element.id.charAt(4);
-      var toClick = "";
+      var toClick = '';
       if (leftOrRight === 'r') {
         toClick = element.id.replace('r', 'l');
       } else {
         toClick = element.id.replace('l', 'r');
       }
-      $("#" + toClick).addClass("selected-circle");
+      $('#' + toClick).addClass('selected-circle');
     }
-
   }
 
   // 'start' / 'stop' timer
@@ -113,4 +172,7 @@ $(document).ready(function () {
 
   function displayMsg (msg) {}
 
+  function randomIntFromInterval (min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 });

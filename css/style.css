@@ -20,10 +20,16 @@ span {
 .img2b {
   background-image: url('../img/img2b.jpg');
 }
+.img3a {
+  background-image: url('../img/img3a.jpg');
+}
+.img3b {
+  background-image: url('../img/img3b.jpg');
+}
 /* END */
 /**************/
 
-.img-fit {
+.tight-fit {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
