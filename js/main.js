@@ -68,7 +68,13 @@ $(document).ready(function () {
       if (isRoundOver()) {
         displayMsg('Splendid job. Now let\'s move on...');
         cleanUpBoard();
-        gameRound('new');
+        timer('stop'); // freeze progress bar
+        displayMsg('countdown');
+        setTimeout(function () {
+          TIME_LEFT = 100; // renew time
+          gameRound('new');
+          timer('start');
+        }, 5000);
       }
     }
     if (!correctPixelSelected) {
@@ -223,6 +229,19 @@ $(document).ready(function () {
       // select from an array of possible messages.
       var cheer = randMsg[randomIntFromInterval(0, randMsg.length - 1)];
       $('#msg-box').text(cheer);
+    } else if (msg === 'countdown') {
+      console.log('initiating countdown');
+      var count = 5;
+
+      var tempTimer = setInterval(function () {
+        console.log('inside new interval timer');
+        $('#countdown-timer').text(count.toString()); // display in middle of screen
+        console.log($('#countdown-timer').text());
+        count--;
+        if (count < 0) {
+          clearInterval(tempTimer);
+        }
+      }, 1000);
     } else {
       $('#msg-box').text(msg);
     }

@@ -1,6 +1,7 @@
 body {
   font-size: 2em;
   background-color: #E4D6A6;
+  position: relative;
 }
 span {
   margin-top: -3px;
@@ -44,10 +45,10 @@ span {
   display: inline-block;
   width: 40px;
   height: 40px;
-  border: 1px dashed grey;
+  /*border: 1px dashed grey;*/
 }
 .pixel:hover {
-  background-color: lightgrey;
+  /*background-color: lightgrey;*/
 }
 .selected-circle {
   background-position: center;
@@ -66,9 +67,6 @@ span {
   padding-right: 0;
   padding-left: 0;
 }
-/*.progress {
-  margin-top: 2%;
-}*/
 
 #ui-bar {
   background-color: #A0BA68;
@@ -79,4 +77,11 @@ span {
 }
 #msg-box {
   font-family: cursive;
+}
+#countdown-timer {
+  display: inline-block;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  border: 1px solid black;
 }
