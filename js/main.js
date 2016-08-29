@@ -84,8 +84,6 @@ $(document).ready(function () {
       $('#score-ui').text(SCORE);
     }
 
-    function isGameOver () {}
-
     // returns true if 5 differences have been found
     // returns false if less than 5
     function isRoundOver () {
@@ -193,16 +191,15 @@ $(document).ready(function () {
         $('#time-bar').css('width', percentage);
         $('#time-digits').text(TIME_LEFT);
         TIME_LEFT--;
-        if (TIME_LEFT === 50) {
-          $('#time-bar').removeClass('progress-bar-success');
-          $('#time-bar').addClass('progress-bar-warning');
-        }
-        if (TIME_LEFT === 15) {
-          $('#time-bar').removeClass('progress-bar-warning');
-          $('#time-bar').addClass('progress-bar-danger');
-        }
         if (TIME_LEFT < 0) {
           clearInterval(TIMER_ID);
+          isGameOver();
+        } else if (TIME_LEFT < 15) {
+          $('#time-bar').removeClass('progress-bar-warning');
+          $('#time-bar').addClass('progress-bar-danger');
+        } else if (TIME_LEFT < 50) {
+          $('#time-bar').removeClass('progress-bar-success');
+          $('#time-bar').addClass('progress-bar-warning');
         }
       }, 1000);
     } else if (option === 'stop') {
@@ -233,6 +230,13 @@ $(document).ready(function () {
 
   function cleanUpBoard () {
     $('.pixel').removeClass('selected-circle');
+  }
+
+  function isGameOver () {
+    if (TIME_LEFT < 0) {
+      displayMsg('GAME OVER');
+      // pop up window w/ 2 options: (1) restart (2) cancel
+    }
   }
 
   // function restart () {}
