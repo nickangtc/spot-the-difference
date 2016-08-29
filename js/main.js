@@ -27,7 +27,7 @@ $(document).ready(function () {
   // Stores all previously the above img objects.
   var IMAGES = [img1, img2, img3];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
-  var CURRENT_IMG_OBJ = currentRound('check'); // stores answers for current round.
+  var CURRENT_IMG_OBJ = gameRound('check'); // stores answers for current round.
 
   // --- INITALISE GAME ---
 
@@ -66,8 +66,9 @@ $(document).ready(function () {
       incrementScore();
       displayMsg('random');
       if (isRoundOver()) {
-        // move to next round!
-        currentRound('new');
+        displayMsg('Splendid job. Now let\'s move on...');
+        cleanUpBoard();
+        gameRound('new');
       }
     }
     if (!correctPixelSelected) {
@@ -133,7 +134,7 @@ $(document).ready(function () {
   // 2 options to manipulate images -
   // (1) 'new': retires old image and serves new one on DOM.
   // (2) 'check': returns current in-play image object.
-  function currentRound (option) {
+  function gameRound (option) {
     if (option === 'new') {
       // DEALING WITH THE OLD - Update javascript variables:
       var oldImgObj = IMAGES[CUR_IMG_IND];
@@ -155,7 +156,7 @@ $(document).ready(function () {
   }
 
   // Updates DOM with new image for a new round.
-  // Called by currentRound function.
+  // Called by gameRound function.
   function serveNewImg (imgObject) {
     // 'img' argument is an object corresponding to current img in play.
     console.log('img object in serveNewImg: ', imgObject);
@@ -182,7 +183,6 @@ $(document).ready(function () {
     $('#left-pane').addClass(imgObject.cssClass + 'a');
     $('#right-pane').addClass(imgObject.cssClass + 'b');
   }
-
 
   // 'start' / 'stop' timer
   // 'add time for time extension
@@ -212,10 +212,6 @@ $(document).ready(function () {
 
   function useClue () {}
 
-  function restart () {}
-
-  function popUpMsg (msg) {}
-
   function displayMsg (msg) {
     var randMsg = [
       'Good call.',
@@ -230,6 +226,14 @@ $(document).ready(function () {
       $('#msg-box').text(msg);
     }
   }
+
+  function cleanUpBoard () {
+    $('.pixel').removeClass('selected-circle');
+  }
+
+  // function restart () {}
+
+  // function popUpMsg (msg) {}
 
   function randomIntFromInterval (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
