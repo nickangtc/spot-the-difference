@@ -64,6 +64,7 @@ $(document).ready(function () {
       $('#' + element.id).addClass('selected-circle');
       dittoClick(element); // execute ONLY if choice is right
       incrementScore();
+      displayMsg('random');
     }
     if (!correctPixelSelected) {
       // make 'X' img appear and fade out
@@ -199,7 +200,18 @@ $(document).ready(function () {
   function popUpMsg (msg) {}
 
   function displayMsg (msg) {
-    $('#msg-box').text(msg);
+    var randMsg = [
+      'Good call.',
+      'Very astute, Watson.',
+      'Surely you\'re rubbing off me!'
+    ];
+    if (msg === 'random') {
+      // select from an array of possible messages.
+      var cheer = randMsg[randomIntFromInterval(0, randMsg.length - 1)];
+      $('#msg-box').text(cheer);
+    } else {
+      $('#msg-box').text(msg);
+    }
   }
 
   function randomIntFromInterval (min, max) {
