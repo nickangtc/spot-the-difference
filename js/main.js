@@ -6,13 +6,16 @@ $(document).ready(function () {
   var TIME_LEFT = 99;
   var GAME_OVER = false;
 
-  var IMAGES = [img1, img2];
+  var CUR_IMG_IND = 0;
   var img1 = {
     answerIndex: [10, 20, 30, 40, 50]
   };
   var img2 = {
     answerIndex: [10, 20, 30, 40, 50]
   };
+
+  // Stores all previously declared img vars.
+  var IMAGES = [img1, img2];
 
   // --- INITALISE GAME ---
 
@@ -31,10 +34,15 @@ $(document).ready(function () {
   // executes when any pixel is clicked.
   function playTurn (choice) {
     var element = choice.target;
-    $('#' + element.id).addClass('selected-circle');
-    console.log("clicked on: " + element.id);
-
-    dittoClick(element);  // execute ONLY if choice is right
+    console.log('clicked on: ' + element.id);
+    var correctPixelSelected = isRight(element.id);
+    if (correctPixelSelected) {
+      $('#' + element.id).addClass('selected-circle');
+      dittoClick(element); // execute ONLY if choice is right
+    } else if (!correctPixelSelected) {
+      // make 'X' img fade in and out
+      // maybe vibrate the page too
+    }
 
     function currentChallenge () {}
 
@@ -42,7 +50,24 @@ $(document).ready(function () {
 
     function whoWon () {}
 
-    function isRight (pixel) {}
+    function isRight (pixel) {
+      // pixel format: pix-r-10
+      // img1.answerIndex;
+      var currentImgObj = IMAGES[CUR_IMG_IND];
+      var currentAnswersArr = currentImgObj.answerIndex;
+      console.log('arg passed to isRight: ' + pixel);
+      for (var i = 0; i < currentAnswersArr.length; i++) {
+        if (pixel.endsWith(currentAnswersArr[i])) {
+          currentAnswersArr[i] = 'found';
+          console.log('correct pixel found!');
+          console.log('new answer index: ' + currentAnswersArr);
+          return true;
+        }
+      }
+      console.log('wrong pixel selected');
+      return false;
+    }
+
 
     // Duplicates clicks on one panel on the other.
     function dittoClick (element) {
