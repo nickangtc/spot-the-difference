@@ -27,6 +27,7 @@ $(document).ready(function () {
   // Stores all previously the above img objects.
   var IMAGES = [img1, img2, img3];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
+  var CURRENT_IMG_OBJ = currentRound('check'); // stores answers for current round.
 
   // --- INITALISE GAME ---
 
@@ -57,73 +58,23 @@ $(document).ready(function () {
   // executes when any pixel is clicked.
   function playTurn (choice) {
     var element = choice.target;
-    console.log('clicked on: ' + element.id);
     var correctPixelSelected = isRight(element.id);
-    // Executes when correct pixel is selected by user.
+
     if (correctPixelSelected) {
       $('#' + element.id).addClass('selected-circle');
       dittoClick(element); // execute ONLY if choice is right
       incrementScore();
       displayMsg('random');
+      if (isRoundOver()) {
+        // move to next round!
+        currentRound('new');
+      }
     }
     if (!correctPixelSelected) {
       // make 'X' img appear and fade out
       // play salah sound
       // maybe vibrate the page too
       timer('penalty');
-    }
-    setTimeout(function () { // TESTING
-      doImg('new');
-    }, 2000);
-
-    // 2 options to manipulate images -
-    // (1) 'new': retires old image and serves new one on DOM.
-    // (2) 'check': returns current in-play image object.
-    function doImg (option) {
-      if (option === 'new') {
-        // OLD MANAGEMENT - Update javascript variables:
-        var oldImgObj = IMAGES[CUR_IMG_IND];
-        console.log('old image object: ', oldImgObj);
-        IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
-        IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
-        // NEW MANAGEMENT
-        var randNum = randomIntFromInterval(0, IMAGES.length - 1);
-        CUR_IMG_IND = randNum; // randomly select new image to serve
-        var newImgObj = IMAGES[CUR_IMG_IND];
-        console.log('new image object: ', newImgObj);
-        serveNewImg(newImgObj); // removes old image, adds new one
-      }
-      if (option === 'check') {
-        // returns current image object
-        return IMAGES[CUR_IMG_IND];
-      }
-
-      function serveNewImg (imgObject) {
-        // 'img' argument is an object corresponding to current img in play.
-        console.log('img object in serveNewImg: ', imgObject);
-        var leftPaneClassList = document.getElementById('left-pane').classList;
-        var rightPaneClassList = document.getElementById('right-pane').classList;
-        var leftOldImgClass = '';
-        var rightOldImgClass = '';
-        // finds out name of current image class on screen
-        leftPaneClassList.forEach(function (element, index, array) {
-          if (element.includes('img')) {
-            leftOldImgClass = element;
-          }
-        });
-        rightPaneClassList.forEach(function (element, index, array) {
-          if (element.includes('img')) {
-            rightOldImgClass = element;
-          }
-        });
-        // remove old image CSS class
-        $('#left-pane').removeClass(leftOldImgClass);
-        $('#right-pane').removeClass(rightOldImgClass);
-        // add new image CSS class
-        // based on img object's 'name' key
-        $('#left-pane').addClass(imgObject.cssClass + 'a');
-        $('#right-pane').addClass(imgObject.cssClass + 'b');
-      }
     }
 
     function incrementScore () {
@@ -134,19 +85,31 @@ $(document).ready(function () {
 
     function isGameOver () {}
 
+    // returns true if 5 differences have been found
+    // returns false if less than 5
+    function isRoundOver () {
+      var count = 0;
+      for (var j = 0; j < CURRENT_IMG_OBJ.answerIndex.length; j++) {
+        if (CURRENT_IMG_OBJ.answerIndex[j] === 'found') {
+          count++;
+        }
+      }
+      if (count === 5) {
+        return true;
+      }
+      return false;
+    }
+
     function whoWon () {}
 
     function isRight (pixel) {
       // pixel format: pix-r-10
       // img1.answerIndex;
-      var currentImgObj = IMAGES[CUR_IMG_IND];
-      var currentAnswersArr = currentImgObj.answerIndex;
       console.log('arg passed to isRight: ' + pixel);
-      for (var i = 0; i < currentAnswersArr.length; i++) {
-        if (pixel.endsWith(currentAnswersArr[i])) {
-          currentAnswersArr[i] = 'found';
-          console.log('correct pixel found!');
-          console.log('new answer index: ' + currentAnswersArr);
+      for (var i = 0; i < CURRENT_IMG_OBJ.answerIndex.length; i++) {
+        if (pixel.endsWith(CURRENT_IMG_OBJ.answerIndex[i])) {
+          CURRENT_IMG_OBJ.answerIndex[i] = 'found';
+          console.log('new answer index: ' + CURRENT_IMG_OBJ.answerIndex);
           return true;
         }
       }
@@ -166,6 +129,60 @@ $(document).ready(function () {
       $('#' + toClick).addClass('selected-circle');
     }
   }
+
+  // 2 options to manipulate images -
+  // (1) 'new': retires old image and serves new one on DOM.
+  // (2) 'check': returns current in-play image object.
+  function currentRound (option) {
+    if (option === 'new') {
+      // DEALING WITH THE OLD - Update javascript variables:
+      var oldImgObj = IMAGES[CUR_IMG_IND];
+      IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
+      IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
+      // BRING ON THE NEW
+      // randomly select new image to serve
+      CUR_IMG_IND = randomIntFromInterval(0, IMAGES.length - 1);
+      // update CURRENT_IMG_OBJ
+      var newImgObj = IMAGES[CUR_IMG_IND];
+      CURRENT_IMG_OBJ = newImgObj;
+      console.log('new image object: ', newImgObj);
+      serveNewImg(newImgObj); // removes old image, adds new one
+    }
+    if (option === 'check') {
+      // returns current image object
+      return IMAGES[CUR_IMG_IND];
+    }
+  }
+
+  // Updates DOM with new image for a new round.
+  // Called by currentRound function.
+  function serveNewImg (imgObject) {
+    // 'img' argument is an object corresponding to current img in play.
+    console.log('img object in serveNewImg: ', imgObject);
+    var leftPaneClassList = document.getElementById('left-pane').classList;
+    var rightPaneClassList = document.getElementById('right-pane').classList;
+    var leftOldImgClass = '';
+    var rightOldImgClass = '';
+    // finds out name of current image class on screen
+    leftPaneClassList.forEach(function (element, index, array) {
+      if (element.includes('img')) {
+        leftOldImgClass = element;
+      }
+    });
+    rightPaneClassList.forEach(function (element, index, array) {
+      if (element.includes('img')) {
+        rightOldImgClass = element;
+      }
+    });
+    // remove old image CSS class
+    $('#left-pane').removeClass(leftOldImgClass);
+    $('#right-pane').removeClass(rightOldImgClass);
+    // add new image CSS class
+    // based on img object's 'name' key
+    $('#left-pane').addClass(imgObject.cssClass + 'a');
+    $('#right-pane').addClass(imgObject.cssClass + 'b');
+  }
+
 
   // 'start' / 'stop' timer
   // 'add time for time extension
