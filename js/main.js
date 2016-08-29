@@ -37,14 +37,14 @@ $(document).ready(function () {
     $('#pix-r-' + i).on('click', playTurn);
   }
   // Click listeners for Help buttons
-  $('#help-clue').on('click', useClue);
-  $('#help-time').on('click', function () {
+  $('#assist-clue').on('click', useClue);
+  $('#assist-time').on('click', function () {
     if (ASSIST_TIME_CREDITS > 0) {
       timer('add');
       ASSIST_TIME_CREDITS--;
       $(this).text(ASSIST_TIME_CREDITS);
     } else if (ASSIST_TIME_CREDITS === 0) {
-      // update user msg "curious, time machine failed!"
+      displayMsg('Most curious, the time machine failed!');
     }
   });
 
@@ -185,7 +185,7 @@ $(document).ready(function () {
       }, 1000);
     } else if (option === 'stop') {
       clearInterval(TIMER_ID);
-    } else if (option === 'add') {  // used when user activates help-time
+    } else if (option === 'add') {  // used when user activates assist-time
       TIME_LEFT += 10;
     } else if (option === 'penalty') { // when user selects wrong pixel
       TIME_LEFT -= 6;
@@ -198,7 +198,9 @@ $(document).ready(function () {
 
   function popUpMsg (msg) {}
 
-  function displayMsg (msg) {}
+  function displayMsg (msg) {
+    $('#msg-box').text(msg);
+  }
 
   function randomIntFromInterval (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
