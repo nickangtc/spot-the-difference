@@ -67,13 +67,14 @@ $(document).ready(function () {
       displayMsg('random');
       if (isRoundOver()) {
         displayMsg('Splendid job. Now let\'s move on...');
-        cleanUpBoard();
         timer('stop'); // freeze progress bar
         displayMsg('countdown');
         setTimeout(function () {
           TIME_LEFT = 100; // renew time
+          clearBoard();
           gameRound('new');
           timer('start');
+          displayMsg('Don\'t let this simple puzzle beat you, Watson...');
         }, 5000);
       }
     }
@@ -201,11 +202,15 @@ $(document).ready(function () {
           clearInterval(TIMER_ID);
           isGameOver();
         } else if (TIME_LEFT < 15) {
-          $('#time-bar').removeClass('progress-bar-warning');
+          $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-danger');
+          // $('#time-bar').animateCss('jello');
         } else if (TIME_LEFT < 50) {
-          $('#time-bar').removeClass('progress-bar-success');
+          $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-warning');
+        } else if (TIME_LEFT === 99) {
+          $('#time-bar').removeClass('progress-bar-warning progress-bar-success progress-bar-danger');
+          $('#time-bar').addClass('progress-bar-success');
         }
       }, 1000);
     } else if (option === 'stop') {
@@ -236,10 +241,10 @@ $(document).ready(function () {
       var tempTimer = setInterval(function () {
         console.log('inside new interval timer');
         $('#countdown-timer').text(count.toString()); // display in middle of screen
-        console.log($('#countdown-timer').text());
         count--;
         if (count < 0) {
           clearInterval(tempTimer);
+          $('#countdown-timer').text('');
         }
       }, 1000);
     } else {
@@ -247,7 +252,7 @@ $(document).ready(function () {
     }
   }
 
-  function cleanUpBoard () {
+  function clearBoard () {
     $('.pixel').removeClass('selected-circle');
   }
 
@@ -261,6 +266,17 @@ $(document).ready(function () {
   // function restart () {}
 
   // function popUpMsg (msg) {}
+
+  // -- OTHER NON-LOGIC FUNCTIONS ---
+  // animate.css jQuery extension function
+  $.fn.extend({
+    animateCss: function (animationName) {
+      var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+      $(this).addClass('animated ' + animationName).one(animationEnd, function () {
+        $(this).removeClass('animated ' + animationName);
+      });
+    }
+  });
 
   function randomIntFromInterval (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);

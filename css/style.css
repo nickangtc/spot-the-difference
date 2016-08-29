@@ -80,8 +80,9 @@ span {
 }
 #countdown-timer {
   display: inline-block;
+  font-size: 9em;
+  color: white;
   position: absolute;
-  top: 10%;
-  left: 10%;
-  border: 1px solid black;
+  top: 50%;
+  left: 50%;
 }
