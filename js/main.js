@@ -99,6 +99,7 @@ $(document).ready(function () {
       // play salah sound
       timer('penalty');
       $('#' + elementId).animateCss('wrong-cross fadeOut');
+      $('#game-stage').animateCss('headShake');
     }
 
     function incrementScore () {
