@@ -66,7 +66,7 @@ $(document).ready(function () {
       var correctPixelSelected = isRight(elementId);
     }
 
-    if (correctPixelSelected) {
+    if (correctPixelSelected && !GAME_OVER) {
       $('#' + elementId).addClass('selected-circle');
       dittoClick(elementId); // execute ONLY if choice is right
       incrementScore();
@@ -95,7 +95,7 @@ $(document).ready(function () {
         }
       }
     }
-    if (!correctPixelSelected) {
+    if (!correctPixelSelected && !GAME_OVER) {
       // play salah sound
       timer('penalty');
       $('#' + elementId).animateCss('wrong-cross fadeOut');
@@ -226,7 +226,7 @@ $(document).ready(function () {
         TIME_LEFT--;
         if (TIME_LEFT < 0) {
           clearInterval(TIMER_ID);
-          isGameOver();
+          GAME_OVER = true;
         } else if (TIME_LEFT < 15) {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-danger');
