@@ -91,9 +91,9 @@ span {
 #countdown-timer {
   font-family: 'Anonymous Pro', monospace;
   display: inline-block;
-  font-size: 9em;
+  font-size: 20em;
   color: white;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 25%;
+  left: 45%;
 }
