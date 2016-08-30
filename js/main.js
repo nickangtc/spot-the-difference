@@ -115,6 +115,7 @@ $(document).ready(function () {
       console.log('pixel id selected: ' + pixel);
       // Prevents previously correctly selected pixel from returning true.
       // if pixel has 'selected-circle' class, return nonsense string to playTurn().
+      // Array.from() used to convert classList iterable obj to proper array.
       var clArray = Array.from(document.getElementById(pixel).classList);
       if (clArray.indexOf('selected-circle') !== -1) {
         return 'already selected';
@@ -231,7 +232,22 @@ $(document).ready(function () {
     }
   }
 
-  function useClue () {}
+  function useClue () {
+    // reduce clue credits
+    ASSIST_CLUE_CREDITS--;
+    $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
+    // auto-select mechanism
+    // use answer index
+    var answers = CURRENT_IMG_OBJ.answerIndex;
+    for (var i = 0; i < answers.length; i++) {
+      if (answers[i] !== 'found') {
+        // make selection of the right format for playTurn(choice) to execute.
+        var unselectedAns = 'pix-r-' + answers[i];
+        return playTurn(unselectedAns);
+      }
+    }
+    // use playTurn to execute the click
+  }
 
   function displayMsg (msg) {
     var randMsg = [
@@ -267,7 +283,7 @@ $(document).ready(function () {
 
   function isGameOver () {
     if (TIME_LEFT < 0) {
-      displayMsg('GAME OVER');
+      displayMsg('It\'s over Watson, it\'s over...');
       // pop up window w/ 2 options: (1) restart (2) cancel
     }
   }
