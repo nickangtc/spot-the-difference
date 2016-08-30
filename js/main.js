@@ -58,12 +58,16 @@ $(document).ready(function () {
   // ---- Main control-flow function ----
   // executes when any pixel is clicked.
   function playTurn (choice) {
-    var element = choice.target;
-    var correctPixelSelected = isRight(element.id);
-
+    if (typeof choice === 'object') { // set up for click event handler
+      var elementId = choice.target.id;
+      var correctPixelSelected = isRight(elementId);
+    } else if (typeof choice === 'string') { // set up for useClue function
+      var elementId = choice;
+      var correctPixelSelected = isRight(elementId);
+    }
     if (correctPixelSelected) {
-      $('#' + element.id).addClass('selected-circle');
-      dittoClick(element); // execute ONLY if choice is right
+      $('#' + elementId).addClass('selected-circle');
+      dittoClick(elementId); // execute ONLY if choice is right
       incrementScore();
       displayMsg('random');
       if (isRoundOver()) {
@@ -134,13 +138,13 @@ $(document).ready(function () {
     }
 
     // Duplicates clicks on one panel on the other.
-    function dittoClick (element) {
-      var leftOrRight = element.id.charAt(4);
+    function dittoClick (elementId) {
+      var leftOrRight = elementId.charAt(4);
       var toClick = '';
       if (leftOrRight === 'r') {
-        toClick = element.id.replace('r', 'l');
+        toClick = elementId.replace('r', 'l');
       } else {
-        toClick = element.id.replace('l', 'r');
+        toClick = elementId.replace('l', 'r');
       }
       $('#' + toClick).addClass('selected-circle');
     }
@@ -236,18 +240,20 @@ $(document).ready(function () {
     // reduce clue credits
     ASSIST_CLUE_CREDITS--;
     $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
-    // auto-select mechanism
-    // use answer index
+    // -- Auto select mechanism --
     var answers = CURRENT_IMG_OBJ.answerIndex;
-    var pixId = ''; // computer-selected pixel id that is a right answer.
+    var answerIdNum = 'found'; // number that is a correct answer
     var index = 0; // used as counter in while loop.
     // loop through answers until it finds one that is yet to be selected by user.
-    while (pixId === 'found' && index < answers.length) {
-      pixId = 'pix-r-' + answers[index];
-      console.log('pixId computer selected: ', pixId);
+    while (answerIdNum === 'found') {
+      answerIdNum = answers[index];
+      console.log('answerIdNum computer selected: ', answerIdNum);
       index++;
     }
+    // format pixId into something usable by playTurn(choice).
+    var pixId = 'pix-r-' + answerIdNum;
     // use playTurn to execute the click
+    playTurn(pixId);
   }
 
   function displayMsg (msg) {
