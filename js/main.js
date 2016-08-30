@@ -127,20 +127,23 @@ $(document).ready(function () {
 
     function isRight (pixel) {
       // pixel format: pix-r-10
-      var curAnsIndex = CURRENT_IMG_OBJ.answerIndex;
+      var answersInd = CURRENT_IMG_OBJ.answerIndex;
       console.log('pixel id selected: ' + pixel);
       // Prevents previously correctly selected pixel from returning true.
-      // if pixel has 'selected-circle' class, return nonsense string to playTurn().
       // Array.from() used to convert classList iterable obj to proper array.
       var clArray = Array.from(document.getElementById(pixel).classList);
       if (clArray.indexOf('selected-circle') !== -1) {
-        return 'already selected';
+        return 'already selected'; // return nonsense to playTurn()
       } else {  // Verify pixel selected against answer index.
-        for (var i = 0; i < curAnsIndex.length; i++) {
-          if (pixel.endsWith(curAnsIndex[i])) {
-            curAnsIndex[i] = 'found';
+        var pixNum = parseInt(pixel.slice(6)); // extract number at end of pixel id.
+        console.log('pixnum: ', pixNum);
+        // replace
+        for (var i = 0; i < answersInd.length; i++) {
+          console.log('current answer: ', answersInd[i]);
+          if (pixNum === answersInd[i]) {
+            answersInd[i] = 'found';
             console.log('correct pixel selected');
-            console.log('new answer index: ' + curAnsIndex);
+            console.log('new answer index: ' + answersInd);
             return true;
           }
         }
