@@ -3,6 +3,7 @@
 console.log('javascript working');
 
 $(document).ready(function () {
+  console.log('DOM loaded');
   var TIMER_ID = '';
   var TIME_LEFT = 99;
   var GAME_OVER = false;
@@ -110,17 +111,25 @@ $(document).ready(function () {
 
     function isRight (pixel) {
       // pixel format: pix-r-10
-      // img1.answerIndex;
-      console.log('arg passed to isRight: ' + pixel);
-      for (var i = 0; i < CURRENT_IMG_OBJ.answerIndex.length; i++) {
-        if (pixel.endsWith(CURRENT_IMG_OBJ.answerIndex[i])) {
-          CURRENT_IMG_OBJ.answerIndex[i] = 'found';
-          console.log('new answer index: ' + CURRENT_IMG_OBJ.answerIndex);
-          return true;
+      var curAnsIndex = CURRENT_IMG_OBJ.answerIndex;
+      console.log('pixel id selected: ' + pixel);
+      // Prevents previously correctly selected pixel from returning true.
+      // if pixel has 'selected-circle' class, return nonsense string to playTurn().
+      var clArray = Array.from(document.getElementById(pixel).classList);
+      if (clArray.indexOf('selected-circle') !== -1) {
+        return 'already selected';
+      } else {  // Verify pixel selected against answer index.
+        for (var i = 0; i < curAnsIndex.length; i++) {
+          if (pixel.endsWith(curAnsIndex[i])) {
+            curAnsIndex[i] = 'found';
+            console.log('correct pixel selected');
+            console.log('new answer index: ' + curAnsIndex);
+            return true;
+          }
         }
+        console.log('wrong pixel selected');
+        return false;
       }
-      console.log('wrong pixel selected');
-      return false;
     }
 
     // Duplicates clicks on one panel on the other.
