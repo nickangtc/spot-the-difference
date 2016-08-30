@@ -239,12 +239,13 @@ $(document).ready(function () {
     // auto-select mechanism
     // use answer index
     var answers = CURRENT_IMG_OBJ.answerIndex;
-    for (var i = 0; i < answers.length; i++) {
-      if (answers[i] !== 'found') {
-        // make selection of the right format for playTurn(choice) to execute.
-        var unselectedAns = 'pix-r-' + answers[i];
-        return playTurn(unselectedAns);
-      }
+    var pixId = ''; // computer-selected pixel id that is a right answer.
+    var index = 0; // used as counter in while loop.
+    // loop through answers until it finds one that is yet to be selected by user.
+    while (pixId === 'found' && index < answers.length) {
+      pixId = 'pix-r-' + answers[index];
+      console.log('pixId computer selected: ', pixId);
+      index++;
     }
     // use playTurn to execute the click
   }
