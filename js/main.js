@@ -65,26 +65,33 @@ $(document).ready(function () {
       var elementId = choice;
       var correctPixelSelected = isRight(elementId);
     }
+
     if (correctPixelSelected) {
       $('#' + elementId).addClass('selected-circle');
       dittoClick(elementId); // execute ONLY if choice is right
       incrementScore();
       displayMsg('random');
-      // check whether this round is over (5 differences found).
+
+      // check whether THIS round is over (5 differences found).
       if (isRoundOver()) {
-        displayMsg('Splendid job. Now let\'s move on...');
-        timer('stop'); // freeze progress bar
-        displayMsg('countdown');
-        if (!isGameOver()) { // if this is not the final round
+        console.log('round is over');
+        // check if this is the FINAL round
+        if (isGameOver('check')) { // executes if IMAGES.length = 0
+          console.log('final round finished');
+          isGameOver('won'); // play victory video
+        } else if (!isGameOver('check')) { // if this is not the final round
+          console.log('not final round, serving new round');
+          displayMsg('Splendid job. Now let\'s move on...');
+          timer('stop'); // freeze progress bar
+          displayMsg('countdown');
+          // reset time, clear board, start new round
           setTimeout(function () {
-            TIME_LEFT = 100; // renew time
+            TIME_LEFT = 100;
             clearBoard();
             gameRound('new');
             timer('start');
             displayMsg('Don\'t let this simple puzzle beat you, Watson...');
           }, 5000);
-        } else if (isGameOver()) {
-          isGameOver('won'); // play winning animation (?)
         }
       }
     }
@@ -304,13 +311,33 @@ $(document).ready(function () {
   //   }
   // }
 
+  // 3 OPTIONS PARAMETERS
+  // (1) 'CHECK' - RETURNS TRUE IF FINAL ROUND IS OVER
+  // (2) 'LOST' - SETS GAME_OVER TO TRUE, UPDATE displayMsg
+  // (3) 'WON' - SETS GAME_OVER TO TRUE, CALL victoryVideo
   function isGameOver (option) {
-    if (option === undefined) {
+    if (option === 'check') { // returns true if final round is over
+      if (IMAGES.length - 1 === 0) { // no more images to play
+        var count = 0;
+        CURRENT_IMG_OBJ.answerIndex.forEach(function (el, ind, arr) {
+          if (el === 'found') {
+            count++;
+          }
+        });
+        // no more images AND all
+        if (count === CURRENT_IMG_OBJ.answerIndex.length) {
+          console.log('final round gameover detected');
+          return true;
+        }
+      } else {
+        return false;
+      }
+    } else if (option === 'lost') {
       displayMsg('It\'s over Watson, it\'s over...');
       GAME_OVER = true;
-      return true;
     } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
+      GAME_OVER = true;
       victoryVideo();
     }
   }
