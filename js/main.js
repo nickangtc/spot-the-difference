@@ -70,17 +70,22 @@ $(document).ready(function () {
       dittoClick(elementId); // execute ONLY if choice is right
       incrementScore();
       displayMsg('random');
+      // check whether this round is over (5 differences found).
       if (isRoundOver()) {
         displayMsg('Splendid job. Now let\'s move on...');
         timer('stop'); // freeze progress bar
         displayMsg('countdown');
-        setTimeout(function () {
-          TIME_LEFT = 100; // renew time
-          clearBoard();
-          gameRound('new');
-          timer('start');
-          displayMsg('Don\'t let this simple puzzle beat you, Watson...');
-        }, 5000);
+        if (!isGameOver()) { // if this is not the final round
+          setTimeout(function () {
+            TIME_LEFT = 100; // renew time
+            clearBoard();
+            gameRound('new');
+            timer('start');
+            displayMsg('Don\'t let this simple puzzle beat you, Watson...');
+          }, 5000);
+        } else if (isGameOver()) {
+          isGameOver('won'); // play winning animation (?)
+        }
       }
     }
     if (!correctPixelSelected) {
@@ -290,10 +295,23 @@ $(document).ready(function () {
     $('.pixel').removeClass('selected-circle');
   }
 
-  function isGameOver () {
-    if (TIME_LEFT < 0) {
+  // function isGameOver () {
+  //   if (TIME_LEFT < 0) {
+  //     displayMsg('It\'s over Watson, it\'s over...');
+  //     GAME_OVER = true;
+  //     return true;
+  //
+  //   }
+  // }
+
+  function isGameOver (option) {
+    if (option === undefined) {
       displayMsg('It\'s over Watson, it\'s over...');
+      GAME_OVER = true;
+      return true;
+    } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
+
     }
   }
 
@@ -302,6 +320,15 @@ $(document).ready(function () {
   // function popUpMsg (msg) {}
 
   // -- OTHER NON-LOGIC FUNCTIONS ---
+  $('#videoPopUp').modal('toggle');
+  var vidsrc = $('#videoPopUp').find('iframe').attr('src', 'https://www.youtube.com/embed/M8_mCdHFCc4?autoplay=1');
+  $('.modal').each(function(){
+    var src = $(this).find('iframe').attr('src');
+    $(this).on('click', function(){
+      $(this).find('iframe').attr('src', '');
+    });
+  });
+
   // animate.css jQuery extension function
   $.fn.extend({
     animateCss: function (animationName) {
