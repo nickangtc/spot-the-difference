@@ -96,10 +96,9 @@ $(document).ready(function () {
       }
     }
     if (!correctPixelSelected) {
-      // make 'X' img appear and fade out
       // play salah sound
-      // maybe vibrate the page too
       timer('penalty');
+      $('#' + elementId).animateCss('wrong-cross fadeOut');
     }
 
     function incrementScore () {

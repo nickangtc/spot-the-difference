@@ -51,10 +51,16 @@ span {
   /*background-color: lightgrey;*/
 }
 .selected-circle {
+  background-image: url('../img/circle3.png');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  background-image: url('../img/circle3.png');
+}
+.wrong-cross {
+  background-image: url('../img/wrong-cross.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* Modifying Bootstrap */
