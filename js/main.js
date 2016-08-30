@@ -344,9 +344,9 @@ $(document).ready(function () {
 
   // function restart () {}
 
-  // function popUpMsg (msg) {}
-
   // -- OTHER NON-LOGIC FUNCTIONS ---
+
+  // Integrates with Bootstrap modal pop up to show Youtube video.
   function victoryVideo () {
     $('#videoPopUp').modal('show');
     var vidUrl = 'https://www.youtube.com/embed/M8_mCdHFCc4?autoplay=1';

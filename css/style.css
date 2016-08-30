@@ -67,6 +67,13 @@ span {
   padding-right: 0;
   padding-left: 0;
 }
+.cursive-font {
+  font-family: 'Niconne', cursive;
+  font-size: 1.7em;
+}
+.monospace-font {
+  font-family: 'Anonymous Pro', monospace;
+}
 
 #ui-bar {
   background-color: #A0BA68;
@@ -75,10 +82,8 @@ span {
 #game-stage {
   /*background-color: #449651;*/
 }
-#msg-box {
-  font-family: cursive;
-}
 #countdown-timer {
+  font-family: 'Anonymous Pro', monospace;
   display: inline-block;
   font-size: 9em;
   color: white;
