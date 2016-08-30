@@ -238,22 +238,24 @@ $(document).ready(function () {
 
   function useClue () {
     // reduce clue credits
-    ASSIST_CLUE_CREDITS--;
-    $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
-    // -- Auto select mechanism --
-    var answers = CURRENT_IMG_OBJ.answerIndex;
-    var answerIdNum = 'found'; // number that is a correct answer
-    var index = 0; // used as counter in while loop.
-    // loop through answers until it finds one that is yet to be selected by user.
-    while (answerIdNum === 'found') {
-      answerIdNum = answers[index];
-      console.log('answerIdNum computer selected: ', answerIdNum);
-      index++;
+    if (ASSIST_CLUE_CREDITS > 0) {
+      ASSIST_CLUE_CREDITS--;
+      $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
+      // -- Auto select mechanism --
+      var answers = CURRENT_IMG_OBJ.answerIndex;
+      var answerIdNum = 'found'; // number that is a correct answer
+      var index = 0; // used as counter in while loop.
+      // loop through answers until it finds one that is yet to be selected by user.
+      while (answerIdNum === 'found') {
+        answerIdNum = answers[index];
+        console.log('answerIdNum computer selected: ', answerIdNum);
+        index++;
+      }
+      // format pixId into something usable by playTurn(choice).
+      var pixId = 'pix-r-' + answerIdNum;
+      // use playTurn to execute the click
+      playTurn(pixId);
     }
-    // format pixId into something usable by playTurn(choice).
-    var pixId = 'pix-r-' + answerIdNum;
-    // use playTurn to execute the click
-    playTurn(pixId);
   }
 
   function displayMsg (msg) {
