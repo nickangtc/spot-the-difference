@@ -311,7 +311,7 @@ $(document).ready(function () {
       return true;
     } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
-
+      victoryVideo();
     }
   }
 
@@ -320,14 +320,16 @@ $(document).ready(function () {
   // function popUpMsg (msg) {}
 
   // -- OTHER NON-LOGIC FUNCTIONS ---
-  $('#videoPopUp').modal('toggle');
-  var vidsrc = $('#videoPopUp').find('iframe').attr('src', 'https://www.youtube.com/embed/M8_mCdHFCc4?autoplay=1');
-  $('.modal').each(function(){
-    var src = $(this).find('iframe').attr('src');
-    $(this).on('click', function(){
-      $(this).find('iframe').attr('src', '');
+  function victoryVideo () {
+    $('#videoPopUp').modal('show');
+    var vidUrl = 'https://www.youtube.com/embed/M8_mCdHFCc4?autoplay=1';
+    $('#videoPopUp').find('iframe').attr('src', vidUrl);
+    $('.modal').each(function () {
+      $(this).on('click', function () {
+        $(this).find('iframe').attr('src', '');
+      });
     });
-  });
+  }
 
   // animate.css jQuery extension function
   $.fn.extend({
