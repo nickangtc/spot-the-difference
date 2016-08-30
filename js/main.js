@@ -58,12 +58,14 @@ $(document).ready(function () {
   // ---- Main control-flow function ----
   // executes when any pixel is clicked.
   function playTurn (choice) {
+    var elementId = '';
+    var correctPixelSelected = '';
     if (typeof choice === 'object') { // set up for click event handler
-      var elementId = choice.target.id;
-      var correctPixelSelected = isRight(elementId);
+      elementId = choice.target.id;
+      correctPixelSelected = isRight(elementId);
     } else if (typeof choice === 'string') { // set up for useClue function
-      var elementId = choice;
-      var correctPixelSelected = isRight(elementId);
+      elementId = choice;
+      correctPixelSelected = isRight(elementId);
     }
 
     if (correctPixelSelected && !GAME_OVER) {
@@ -76,10 +78,11 @@ $(document).ready(function () {
       if (isRoundOver()) {
         console.log('round is over');
         // check if this is the FINAL round
-        if (isGameOver('check')) { // executes if IMAGES.length = 0
+        if (isGameOver('check')) {
           console.log('final round finished');
           isGameOver('won'); // play victory video
-        } else if (!isGameOver('check')) { // if this is not the final round
+        } else if (!isGameOver('check')) {
+          // if this is NOT the final round
           console.log('not final round, serving new round');
           displayMsg('Splendid job. Now let\'s move on...');
           timer('stop'); // freeze progress bar
@@ -122,8 +125,6 @@ $(document).ready(function () {
       }
       return false;
     }
-
-    function whoWon () {}
 
     function isRight (pixel) {
       // pixel format: pix-r-10
@@ -227,13 +228,12 @@ $(document).ready(function () {
         $('#time-bar').css('width', percentage);
         $('#time-digits').text(TIME_LEFT);
         TIME_LEFT--;
-        if (TIME_LEFT < 0) {
+        if (TIME_LEFT < 0) { // TIME'S UP - GAME OVER!
           clearInterval(TIMER_ID);
           GAME_OVER = true;
         } else if (TIME_LEFT < 15) {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-danger');
-          // $('#time-bar').animateCss('jello');
         } else if (TIME_LEFT < 50) {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-warning');
@@ -341,6 +341,7 @@ $(document).ready(function () {
     } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
       GAME_OVER = true;
+      clearInterval(TIMER_ID);
       victoryVideo();
     }
   }
