@@ -9,6 +9,9 @@ span {
   margin-bottom: -4px;
   margin-left: -3px;
 }
+canvas {
+  position: absolute;
+}
 
 /**************/
 /* GAMEPLAY IMAGES START */
@@ -96,4 +99,7 @@ span {
   position: absolute;
   top: 25%;
   left: 45%;
+}
+#left-pane {
+  position: relative;
 }
