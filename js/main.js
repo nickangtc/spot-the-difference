@@ -13,7 +13,7 @@ $(document).ready(function () {
   var ASSIST_CLUE_CREDITS = 3;
 
   var img1 = {
-    answerIndex: [10, 20, 30, 40, 50],
+    answerIndex: [29, 41, 83, 148, 71],
     cssClass: 'img1'
   };
   var img2 = {
@@ -140,7 +140,6 @@ $(document).ready(function () {
         console.log('pixnum: ', pixNum);
         // replace
         for (var i = 0; i < answersInd.length; i++) {
-          console.log('current answer: ', answersInd[i]);
           if (pixNum === answersInd[i]) {
             answersInd[i] = 'found';
             console.log('correct pixel selected');
