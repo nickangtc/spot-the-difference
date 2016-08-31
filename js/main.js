@@ -33,11 +33,17 @@ $(document).ready(function () {
   // --- INITALISE GAME ---
 
   // CLICK LISTENERS
+
+  // Click listeners for left and right image canvas
+  document.getElementById('canvas-left').addEventListener('mousedown', getPosition, false);
+  document.getElementById('canvas-right').addEventListener('mousedown', getPosition, false);
+
   // Generate click listeners for game 'pixels'.
-  for (var i = 1; i <= 150; i++) {
-    $('#pix-l-' + i).on('click', playTurn);
-    $('#pix-r-' + i).on('click', playTurn);
-  }
+  // for (var i = 1; i <= 150; i++) {
+  //   $('#pix-l-' + i).on('click', playTurn);
+  //   $('#pix-r-' + i).on('click', playTurn);
+  // }
+  
   // Click listeners for Help buttons
   $('#assist-clue').on('click', useClue);
   $('#assist-time').on('click', function () {
@@ -346,38 +352,68 @@ $(document).ready(function () {
   }
 
   // CANVAS CONTROL FUNCTIONS
-  function draw() {
-    var canvas = document.getElementById("canvas-left");
-    if (canvas.getContext) {
-      var ctx = canvas.getContext("2d");
 
-      ctx.beginPath();
-      ctx.arc(50, 50, 25, 0, Math.PI*2, false);
-      ctx.moveTo(155, 50);
-      ctx.arc(130, 50, 25, 0, Math.PI*2, false);
-      ctx.moveTo(175, 80);
-      ctx.arc(150, 80, 25, 0, Math.PI*2, false);
+  // Draws circle on <canvas> elements
+  function drawCircle (id, centerX, centerY, radius) {
+    var canv = document.getElementById(id);
+    var ctx = canv.getContext('2d');
 
-      ctx.stroke();
-    }
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#A0BA68';
+    ctx.stroke();
   }
-  draw();
+  drawCircle('canvas-left', 70, 80, 30);
 
-  var leftPaneOffsetLeft = document.getElementById('left-pane').offsetLeft;
-  var leftPaneOffsetTop = document.getElementById('left-pane').offsetTop;
-  console.log('leftPaneOffsetLeft: ', leftPaneOffsetLeft);
-  console.log('leftPaneOffsetTop: ', leftPaneOffsetTop);
+  // Draws oval shape on <canvas> elements
+  // (modified from: http://bit.ly/2bBPWHm)
+  function drawEllipse (id, centerX, centerY, width, height) {
+    console.log('drawing ellipse');
+    var canv = document.getElementById(id);
+    var ctx = canv.getContext('2d');
+    console.log(canv);
+    ctx.beginPath();
 
-  document.getElementById('canvas-left').addEventListener("mousedown", getPosition, false);
+    ctx.moveTo(centerX, centerY - height / 2); // startpoint top
 
-  function getPosition(event) {
+    ctx.bezierCurveTo( // half an oval
+      centerX + width / 2, centerY - height / 2, // CP top right
+      centerX + width / 2, centerY + height / 2, // CP bottom right
+      centerX, centerY + height / 2); // endpoint bottom
+
+    ctx.bezierCurveTo( // 2nd half
+      centerX - width / 2, centerY + height / 2, // CP bottom left
+      centerX - width / 2, centerY - height / 2, // CP top left
+      centerX, centerY - height / 2); // startpoint top
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#A0BA68';
+    ctx.stroke();
+  }
+  drawEllipse('canvas-left', 50, 50, 30, 100);
+
+  function getPosition (event) {
+    var paneId = event.target.id;
+    var leftOffset;
+    var topOffset;
+    if (paneId.includes('left')) {
+      leftOffset = document.getElementById('left-pane').offsetLeft;
+      topOffset = document.getElementById('left-pane').offsetTop;
+    } else if (paneId.includes('right')) {
+      leftOffset = document.getElementById('right-pane').offsetLeft;
+      topOffset = document.getElementById('right-pane').offsetTop;
+    }
+    console.log('leftOffset: ', leftOffset);
+    console.log('leftPaneOffsetTop: ', topOffset);
     var x = event.x;
     var y = event.y;
 
-    var canvas = document.getElementById("canvas-left");
+    // var canvas = document.getElementById("canvas-left");
 
-    x -= leftPaneOffsetLeft;
-    y -= leftPaneOffsetTop;
+    x -= leftOffset;
+    y -= topOffset;
 
     console.log('x: ', x, ' y: ', y);
 
