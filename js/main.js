@@ -43,7 +43,7 @@ $(document).ready(function () {
   //   $('#pix-l-' + i).on('click', playTurn);
   //   $('#pix-r-' + i).on('click', playTurn);
   // }
-  
+
   // Click listeners for Help buttons
   $('#assist-clue').on('click', useClue);
   $('#assist-time').on('click', function () {
@@ -310,15 +310,6 @@ $(document).ready(function () {
     $('.pixel').removeClass('selected-circle');
   }
 
-  // function isGameOver () {
-  //   if (TIME_LEFT < 0) {
-  //     displayMsg('It\'s over Watson, it\'s over...');
-  //     GAME_OVER = true;
-  //     return true;
-  //
-  //   }
-  // }
-
   // 3 OPTIONS PARAMETERS
   // (1) 'CHECK' - RETURNS TRUE IF FINAL ROUND IS OVER
   // (2) 'LOST' - SETS GAME_OVER TO TRUE, UPDATE displayMsg
@@ -351,7 +342,33 @@ $(document).ready(function () {
     }
   }
 
+  // function restart () {}
+
   // CANVAS CONTROL FUNCTIONS
+
+  // Gets offsetted coordinates of click on <canvas>
+  // x,y origin is at top left corner of canvas element
+  function getPosition (evt) {
+    var paneId = evt.target.id;
+    var leftOffset;
+    var topOffset;
+    if (paneId.includes('left')) {
+      leftOffset = document.getElementById('left-pane').offsetLeft;
+      topOffset = document.getElementById('left-pane').offsetTop;
+    } else if (paneId.includes('right')) {
+      leftOffset = document.getElementById('right-pane').offsetLeft;
+      topOffset = document.getElementById('right-pane').offsetTop;
+    }
+    console.log('leftOffset: ', leftOffset);
+    console.log('leftPaneOffsetTop: ', topOffset);
+    var x = evt.x;
+    var y = evt.y;
+
+    x -= leftOffset;
+    y -= topOffset;
+
+    console.log('x: ', x, ' y: ', y);
+  }
 
   // Draws circle on <canvas> elements
   function drawCircle (id, centerX, centerY, radius) {
@@ -365,6 +382,7 @@ $(document).ready(function () {
     ctx.strokeStyle = '#A0BA68';
     ctx.stroke();
   }
+
   drawCircle('canvas-left', 70, 80, 30);
 
   // Draws oval shape on <canvas> elements
@@ -373,7 +391,6 @@ $(document).ready(function () {
     console.log('drawing ellipse');
     var canv = document.getElementById(id);
     var ctx = canv.getContext('2d');
-    console.log(canv);
     ctx.beginPath();
 
     ctx.moveTo(centerX, centerY - height / 2); // startpoint top
@@ -392,37 +409,34 @@ $(document).ready(function () {
     ctx.strokeStyle = '#A0BA68';
     ctx.stroke();
   }
+
   drawEllipse('canvas-left', 50, 50, 30, 100);
 
-  function getPosition (event) {
-    var paneId = event.target.id;
-    var leftOffset;
-    var topOffset;
-    if (paneId.includes('left')) {
-      leftOffset = document.getElementById('left-pane').offsetLeft;
-      topOffset = document.getElementById('left-pane').offsetTop;
-    } else if (paneId.includes('right')) {
-      leftOffset = document.getElementById('right-pane').offsetLeft;
-      topOffset = document.getElementById('right-pane').offsetTop;
-    }
-    console.log('leftOffset: ', leftOffset);
-    console.log('leftPaneOffsetTop: ', topOffset);
-    var x = event.x;
-    var y = event.y;
+  // Clears both canvas completely
+  function clearCanvas () {
+    var canv = document.getElementById('canvas-left').getBoundingClientRect();
+    var width = Math.round(canv.width);
+    var height = Math.round(canv.height);
+    var canvLeft = document.getElementById('canvas-left').getContext('2d');
+    var canvRight = document.getElementById('canvas-right').getContext('2d');
 
-    // var canvas = document.getElementById("canvas-left");
-
-    x -= leftOffset;
-    y -= topOffset;
-
-    console.log('x: ', x, ' y: ', y);
-
+    canvLeft.clearRect(0, 0, width, height);
+    canvRight.clearRect(0, 0, width, height);
   }
-
-  // function restart () {}
 
   // -- OTHER NON-LOGIC FUNCTIONS ---
 
+  // animate.css jQuery extension function
+  $.fn.extend({
+    animateCss: function (animationName) {
+      var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+      $(this).addClass('animated ' + animationName).one(animationEnd, function () {
+        $(this).removeClass('animated ' + animationName);
+      });
+    }
+  });
+
+  // MATH
   // Integrates with Bootstrap modal pop up to show Youtube video.
   function victoryVideo () {
     $('#videoPopUp').modal('show');
@@ -434,16 +448,6 @@ $(document).ready(function () {
       });
     });
   }
-
-  // animate.css jQuery extension function
-  $.fn.extend({
-    animateCss: function (animationName) {
-      var animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
-      $(this).addClass('animated ' + animationName).one(animationEnd, function () {
-        $(this).removeClass('animated ' + animationName);
-      });
-    }
-  });
 
   function randomIntFromInterval (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
