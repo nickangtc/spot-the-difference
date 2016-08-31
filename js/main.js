@@ -345,6 +345,44 @@ $(document).ready(function () {
     }
   }
 
+  // CANVAS CONTROL FUNCTIONS
+  function draw() {
+    var canvas = document.getElementById("canvas-left");
+    if (canvas.getContext) {
+      var ctx = canvas.getContext("2d");
+
+      ctx.beginPath();
+      ctx.arc(50, 50, 25, 0, Math.PI*2, false);
+      ctx.moveTo(155, 50);
+      ctx.arc(130, 50, 25, 0, Math.PI*2, false);
+      ctx.moveTo(175, 80);
+      ctx.arc(150, 80, 25, 0, Math.PI*2, false);
+
+      ctx.stroke();
+    }
+  }
+  draw();
+
+  var leftPaneOffsetLeft = document.getElementById('left-pane').offsetLeft;
+  var leftPaneOffsetTop = document.getElementById('left-pane').offsetTop;
+  console.log('leftPaneOffsetLeft: ', leftPaneOffsetLeft);
+  console.log('leftPaneOffsetTop: ', leftPaneOffsetTop);
+
+  document.getElementById('canvas-left').addEventListener("mousedown", getPosition, false);
+
+  function getPosition(event) {
+    var x = event.x;
+    var y = event.y;
+
+    var canvas = document.getElementById("canvas-left");
+
+    x -= leftPaneOffsetLeft;
+    y -= leftPaneOffsetTop;
+
+    console.log('x: ', x, ' y: ', y);
+
+  }
+
   // function restart () {}
 
   // -- OTHER NON-LOGIC FUNCTIONS ---
