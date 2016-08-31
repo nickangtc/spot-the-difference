@@ -13,15 +13,29 @@ $(document).ready(function () {
   var ASSIST_CLUE_CREDITS = 3;
 
   var img1 = {
-    answerIndex: [29, 41, 83, 148, 71],
-    cssClass: 'img1'
+    ansCoords: [  // right answer LOCUS
+      [360, 42],  // [x, y] zeroed coordinates
+      [106, 287],
+      [12, 177],
+      [34, 99],
+      [264, 455]
+    ],
+    ansArea: [  // right answer AREA
+      [25, 25], // [x-radius, y-radius]
+      [20, 20],
+      [12, 12],
+      [20, 65],
+      [100, 20]
+    ],
+    cssClass: 'img1',
+    found: [] // will receive arrays of found areas from logFound()
   };
   var img2 = {
-    answerIndex: [10, 20, 30, 40, 50],
+    ansCoords: [10, 20, 30, 40, 50],
     cssClass: 'img2'
   };
   var img3 = {
-    answerIndex: [10, 20, 30, 40, 50],
+    ansCoords: [10, 20, 30, 40, 50],
     cssClass: 'img3'
   };
 
@@ -35,16 +49,10 @@ $(document).ready(function () {
   // CLICK LISTENERS
 
   // Click listeners for left and right image canvas
-  document.getElementById('canvas-left').addEventListener('mousedown', getPosition, false);
-  document.getElementById('canvas-right').addEventListener('mousedown', getPosition, false);
+  document.getElementById('canvas-left').addEventListener('mousedown', playTurn, false);
+  document.getElementById('canvas-right').addEventListener('mousedown', playTurn, false);
 
-  // Generate click listeners for game 'pixels'.
-  // for (var i = 1; i <= 150; i++) {
-  //   $('#pix-l-' + i).on('click', playTurn);
-  //   $('#pix-r-' + i).on('click', playTurn);
-  // }
-
-  // Click listeners for Help buttons
+  // Click listeners for Assist buttons
   $('#assist-clue').on('click', useClue);
   $('#assist-time').on('click', function () {
     if (ASSIST_TIME_CREDITS > 0) {
@@ -63,6 +71,12 @@ $(document).ready(function () {
 
   // ---- Main control-flow function ----
   // executes when any pixel is clicked.
+  function playTurn (ev) {
+    var position = getPosition(ev);
+    var isCorrect = isRight(position);
+  }
+
+  // old playTurn
   function playTurn (choice) {
     var elementId = '';
     var correctPixelSelected = '';
@@ -121,8 +135,8 @@ $(document).ready(function () {
     // returns false if less than 5
     function isRoundOver () {
       var count = 0;
-      for (var j = 0; j < CURRENT_IMG_OBJ.answerIndex.length; j++) {
-        if (CURRENT_IMG_OBJ.answerIndex[j] === 'found') {
+      for (var j = 0; j < CURRENT_IMG_OBJ.ansCoords.length; j++) {
+        if (CURRENT_IMG_OBJ.ansCoords[j] === 'found') {
           count++;
         }
       }
@@ -132,28 +146,51 @@ $(document).ready(function () {
       return false;
     }
 
-    function isRight (pixel) {
-      // pixel format: pix-r-10
-      var answersInd = CURRENT_IMG_OBJ.answerIndex;
-      console.log('pixel id selected: ' + pixel);
-      // Prevents previously correctly selected pixel from returning true.
-      // Array.from() used to convert classList iterable obj to proper array.
-      var clArray = Array.from(document.getElementById(pixel).classList);
-      if (clArray.indexOf('selected-circle') !== -1) {
-        return 'already selected'; // return nonsense to playTurn()
-      } else {  // Verify pixel selected against answer index.
-        var pixNum = parseInt(pixel.slice(6)); // extract number at end of pixel id.
-        console.log('pixnum: ', pixNum);
-        // replace
-        for (var i = 0; i < answersInd.length; i++) {
-          if (pixNum === answersInd[i]) {
-            answersInd[i] = 'found';
-            console.log('correct pixel selected');
-            console.log('new answer index: ' + answersInd);
-            return true;
+    function logFound (obj, areaArr) {
+      // areaArr format: [lowerX, upperX, lowerY, upperY]
+      var target = obj;
+      target['found'].push(areaArr); // store array in obj key 'found'
+    }
+
+    // checks whether a click is in an undiscovered area.
+    function undiscovered (obj, clickX, clickY) {
+      console.log('inside undiscovered func, checking if spot was previously found');
+      var arr = obj['found']; // stores 2d array
+      for (var i = 0; i < arr.length; i++) {
+        if (clickX >= arr[i][0] && clickX <= arr[i][1] && clickY >= arr[i][2] && clickY <= arr[i][3]) {
+          return false; // the click is not undiscovered
+        }
+      }
+      return true; // the click is undiscovered
+    }
+
+    function isRight (coords) {
+      var clickX = coords[0];
+      var clickY = coords[1];
+      var coordsAnswerArr = CURRENT_IMG_OBJ.ansCoords; // [[x, y], [x, y]...]
+      var areaAnswerArr = CURRENT_IMG_OBJ.ansArea; // [[x-radius, y-radius]...]
+
+      // tests for already-rightly-clicked
+      if (!undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+        return 'already discovered';
+      } else if (undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+        // check user's click against answers
+        for (var i = 0; i < coordsAnswerArr.length; i++) {
+          console.log('coords answer array length: ', coordsAnswerArr.length);
+          if (typeof coordsAnswerArr[i] !== 'string') { //
+            var x1 = coordsAnswerArr[i][0] - areaAnswerArr[i][0]; // x lower limit
+            var x2 = coordsAnswerArr[i][0] + areaAnswerArr[i][0]; // x upper limit
+            var y1 = coordsAnswerArr[i][1] - areaAnswerArr[i][1]; // y lower limit
+            var y2 = coordsAnswerArr[i][1] + areaAnswerArr[i][1]; // y upper limit
+
+            if (clickX >= x1 && clickX <= x2 && clickY >= y1 && clickY <= y2) { // if within hot zone
+              CURRENT_IMG_OBJ.ansCoords[i] = 'found'; // leave mark in answer array
+              logFound(CURRENT_IMG_OBJ, [x1, x2, y1, y2]);
+              console.log('ansCoords arr updated: ', CURRENT_IMG_OBJ.ansCoords);
+              return true;
+            }
           }
         }
-        console.log('wrong pixel selected');
         return false;
       }
     }
@@ -262,7 +299,7 @@ $(document).ready(function () {
       ASSIST_CLUE_CREDITS--;
       $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
       // -- Auto select mechanism --
-      var answers = CURRENT_IMG_OBJ.answerIndex;
+      var answers = CURRENT_IMG_OBJ.ansCoords;
       var answerIdNum = 'found'; // number that is a correct answer
       var index = 0; // used as counter in while loop.
       // loop through answers until it finds one that is yet to be selected by user.
@@ -318,13 +355,13 @@ $(document).ready(function () {
     if (option === 'check') { // returns true if final round is over
       if (IMAGES.length - 1 === 0) { // no more images to play
         var count = 0;
-        CURRENT_IMG_OBJ.answerIndex.forEach(function (el, ind, arr) {
+        CURRENT_IMG_OBJ.ansCoords.forEach(function (el, ind, arr) {
           if (el === 'found') {
             count++;
           }
         });
         // no more images AND all
-        if (count === CURRENT_IMG_OBJ.answerIndex.length) {
+        if (count === CURRENT_IMG_OBJ.ansCoords.length) {
           console.log('final round gameover detected');
           return true;
         }
@@ -348,8 +385,8 @@ $(document).ready(function () {
 
   // Gets offsetted coordinates of click on <canvas>
   // x,y origin is at top left corner of canvas element
-  function getPosition (evt) {
-    var paneId = evt.target.id;
+  function getPosition (ev) {
+    var paneId = ev.target.id;
     var leftOffset;
     var topOffset;
     if (paneId.includes('left')) {
@@ -368,6 +405,8 @@ $(document).ready(function () {
     y -= topOffset;
 
     console.log('x: ', x, ' y: ', y);
+
+    return [x, y];
   }
 
   // Draws circle on <canvas> elements
@@ -383,7 +422,7 @@ $(document).ready(function () {
     ctx.stroke();
   }
 
-  drawCircle('canvas-left', 70, 80, 30);
+  // drawCircle('canvas-left', 70, 80, 30);
 
   // Draws oval shape on <canvas> elements
   // (modified from: http://bit.ly/2bBPWHm)
@@ -410,7 +449,7 @@ $(document).ready(function () {
     ctx.stroke();
   }
 
-  drawEllipse('canvas-left', 50, 50, 30, 100);
+  // drawEllipse('canvas-left', 50, 50, 30, 100);
 
   // Clears both canvas completely
   function clearCanvas () {
