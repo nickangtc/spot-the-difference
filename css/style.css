@@ -84,6 +84,9 @@ canvas {
 #ui-bar {
   background-color: #A0BA68;
   padding-top: 1.5%;
+  padding-bottom: 0.3%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 #game-stage {
   /*background-color: #449651;*/
