@@ -41,51 +41,52 @@
         </span>
       </div>
     </div>
-  </div>
 
-  <!-- MESSAGE BOX -->
-  <div class="row text-center">
-    <div id="msg-box" class="col-sm-6 col-sm-offset-3 cursive-font">Let's get straight into it!</div>
-  </div>
-
-
-  <!-- DIVIDED GAMEPLAY AREA (left-pane, right-pane) -->
-  <!-- DO NOT CHANGE ID NAMES - strong dependencies in JS -->
-  <div id="game-stage" class="row no-gutter">
-    <!-- Left Picture Pane -->
-
-    <!-- Do not add to 'left-pane' any class name containing 'img' -->
-    <!-- // it will screw up 'doImg' function in main.js -->
-    <div id="left-pane" class="col-sm-4 col-sm-offset-2 tight-fit img1a">
-      <canvas id="canvas-left" width="400" height="600"></canvas>
+    <!-- MESSAGE BOX -->
+    <div class="row text-center">
+      <div id="msg-box" class="col-sm-6 col-sm-offset-3 cursive-font">Let's get straight into it!</div>
     </div>
 
-    <!-- Right Picture Pane -->
-    <div id="right-pane" class="col-sm-4 col-sm-offset-1 tight-fit img1b">
-      <canvas id="canvas-right" width="400" height="600"></canvas>
-    </div>
+  </div>
 
-    <div id="countdown-timer" class="animated infinite pulse"></div>
+  <div class="container">
+    <!-- DIVIDED GAMEPLAY AREA (left-pane, right-pane) -->
+    <!-- DO NOT CHANGE ID NAMES - strong dependencies in JS -->
+    <div id="game-stage" class="row no-gutter">
+      <!-- Left Picture Pane -->
 
-    <!-- Modal for youtube pop up -->
-    <div class="modal fade" id="videoPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content questrial-font">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Nice job, Sherlock.</h4>
-          </div>
-          <div class="modal-body">
-            <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <!-- Do not add to 'left-pane' any class name containing 'img' -->
+      <!-- // it will screw up 'doImg' function in main.js -->
+      <div id="left-pane" class="col-sm-4 col-sm-offset-2 tight-fit img1a">
+        <canvas id="canvas-left" width="400" height="600"></canvas>
+      </div>
+
+      <!-- Right Picture Pane -->
+      <div id="right-pane" class="col-sm-4 tight-fit img1b">
+        <canvas id="canvas-right" width="400" height="600"></canvas>
+      </div>
+
+      <div id="countdown-timer" class="animated infinite pulse"></div>
+
+      <!-- Modal for youtube pop up -->
+      <div class="modal fade" id="videoPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content questrial-font">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Nice job, Sherlock.</h4>
+            </div>
+            <div class="modal-body">
+              <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
+
     </div>
-
   </div>
-
 </body>
 </html>
