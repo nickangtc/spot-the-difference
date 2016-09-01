@@ -86,7 +86,7 @@ $(document).ready(function () {
     if (ASSIST_TIME_CREDITS > 0) {
       timer('add');
       ASSIST_TIME_CREDITS--;
-      $(this).text(ASSIST_TIME_CREDITS);
+      $('#assist-time').children('span').text(ASSIST_TIME_CREDITS.toString());
     } else if (ASSIST_TIME_CREDITS === 0) {
       displayMsg('Most curious, the time machine failed!');
     }
@@ -356,7 +356,7 @@ $(document).ready(function () {
     // reduce clue credits
     if (ASSIST_CLUE_CREDITS > 0) {
       ASSIST_CLUE_CREDITS--;
-      $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
+      $('#assist-clue').children('span').text(ASSIST_CLUE_CREDITS.toString());
 
       // -- Auto select mechanism --
       // coordsArray[i] is associated directly with areaArray[i]
