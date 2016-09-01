@@ -144,11 +144,11 @@ $(document).ready(function () {
           displayMsg('countdown');
           // reset time, clear board, start new round
           setTimeout(function () {
-            TIME_LEFT = 100;
+            TIME_LEFT += 15;
             clearCanvas();
             gameRound('new');
             timer('start');
-            displayMsg('Don\'t let this simple puzzle beat you, Watson...');
+            displayMsg('One more coming your way...');
           }, 5000);
         }
       }
@@ -258,7 +258,7 @@ $(document).ready(function () {
         return false;
       }
     } else if (option === 'lost') {
-      displayMsg('It\'s over Watson, it\'s over...');
+      displayMsg('Game over. :( Refresh to try again!');
       GAME_OVER = true;
     } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
@@ -397,7 +397,8 @@ $(document).ready(function () {
     var randMsg = [
       'Good call.',
       'Very astute, Watson.',
-      'Surely you\'re rubbing off me!'
+      'Have you considered becoming a detective?',
+      'Ooh I didn\'t even see that!'
     ];
     if (msg === 'random') {
       // select from an array of possible messages.

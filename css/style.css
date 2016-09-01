@@ -8,13 +8,6 @@ canvas {
   /* z-index to make canvas layer appear below span grids */
   z-index: 1;
 }
-span {
-  margin-top: -3px;
-  margin-right: -3px;
-  margin-bottom: -4px;
-  margin-left: -3px;
-  z-index: 3;
-}
 
 /**************/
 /* GAMEPLAY IMAGES START */
