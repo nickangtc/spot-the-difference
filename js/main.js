@@ -84,6 +84,7 @@ $(document).ready(function () {
   $('#assist-clue').on('click', useClue);
   $('#assist-time').on('click', function () {
     if (ASSIST_TIME_CREDITS > 0) {
+      document.getElementById('time-fx').play();
       timer('add');
       ASSIST_TIME_CREDITS--;
       $('#assist-time').children('span').text(ASSIST_TIME_CREDITS.toString());
@@ -358,6 +359,7 @@ $(document).ready(function () {
     if (ASSIST_CLUE_CREDITS > 0) {
       ASSIST_CLUE_CREDITS--;
       $('#assist-clue').children('span').text(ASSIST_CLUE_CREDITS.toString());
+      document.getElementById('clue-fx').play();
 
       // -- Auto select mechanism --
       // coordsArray[i] is associated directly with areaArray[i]
