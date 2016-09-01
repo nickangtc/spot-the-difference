@@ -133,6 +133,7 @@ $(document).ready(function () {
       drawEllipse('canvas-right', centerX, centerY, width, height);
       incrementScore();
       displayMsg('random');
+      document.getElementById('right-fx').play();
       if (isRoundOver()) {
         // check if this is the FINAL round
         if (isGameOver('final')) {
@@ -155,10 +156,10 @@ $(document).ready(function () {
     }
     // Executes when wrong choice is detected.
     if (!isCorrect && !GAME_OVER) {
-      // play salah sound
       timer('penalty');
       // Draw cross using canvas
       drawAndFadeCross(elementId, position[0], position[1]);
+      document.getElementById('wrong-fx').play();
       $('#game-stage').animateCss('headShake');
     }
   }
