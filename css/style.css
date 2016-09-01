@@ -6,6 +6,7 @@ body {
 }
 canvas {
   position: absolute;
+  left: 0;
   /* z-index to make canvas layer appear below span grids */
   z-index: 1;
 }
@@ -64,7 +65,7 @@ canvas {
 }
 
 /* Modifying Bootstrap */
-.row.no-gutter {
+/*.row.no-gutter {
   margin-left: 0;
   margin-right: 0;
 }
@@ -72,7 +73,7 @@ canvas {
 .row.no-gutter [class*='col-']:not(:last-child) {
   padding-right: 0;
   padding-left: 0;
-}
+}*/
 .cursive-font {
   font-family: 'Questrial', sans-serif;
   font-size: 1.3em;
@@ -89,7 +90,7 @@ canvas {
   border-bottom-right-radius: 5px;
 }
 #game-stage {
-  /*background-color: #449651;*/
+
 }
 #countdown-timer {
   font-family: 'Questrial', sans-serif;
@@ -103,7 +104,11 @@ canvas {
 }
 #left-pane {
   position: relative;
+  margin-right: 10px;
 }
+/*#right-pane {
+  margin-left: 10px;
+}*/
 #msg-box {
   margin-top: 20px;
   margin-bottom: 20px;
