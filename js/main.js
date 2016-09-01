@@ -333,10 +333,13 @@ $(document).ready(function () {
         if (TIME_LEFT < 0) { // TIME'S UP - GAME OVER!
           clearInterval(TIMER_ID);
           GAME_OVER = true;
-        } else if (TIME_LEFT < 15) {
+          document.getElementById('ticking').pause();
+          document.getElementById('gameover').play();
+        } else if (TIME_LEFT < 20) {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-danger');
-        } else if (TIME_LEFT < 50) {
+          document.getElementById('ticking').play();
+        } else if (TIME_LEFT === 50) {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success');
           $('#time-bar').addClass('progress-bar-warning');
         } else if (TIME_LEFT === 99) {
@@ -533,7 +536,7 @@ $(document).ready(function () {
   // Integrates with Bootstrap modal pop up to show Youtube video.
   function victoryVideo () {
     $('#videoPopUp').modal('show');
-    var vidUrl = 'https://www.youtube.com/embed/M8_mCdHFCc4?autoplay=1';
+    var vidUrl = 'https://www.youtube.com/embed/JPBRbIvs5lc?autoplay=1';
     $('#videoPopUp').find('iframe').attr('src', vidUrl);
     $('.modal').each(function () {
       $(this).on('click', function () {
