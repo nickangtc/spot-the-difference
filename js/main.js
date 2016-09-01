@@ -100,19 +100,31 @@ $(document).ready(function () {
   // ---- Main control-flow function ----
   // executes when any pixel is clicked.
   function playTurn (ev) {
-    var position = getPosition(ev); // returns [x-val, y-val]
-    console.log('position: ', position);
-    var isCorrect = isRight(position);
-    console.log('correct or not?: ', isCorrect);
-    var elementId = ev.target.id;
+    var isCorrect = false;
+    var foundArr = [];
+    var latestFind = [];  // 1d array
 
+    if (Array.isArray(ev)) {
+      // executes when user clicks Clue Assist
+      foundArr = ev;
+      isCorrect = true; // ansArr will always be true
+      latestFind = ev;
+      // executes when user clicks on image to try to spot difference
+    } else if (typeof ev === 'object' && !Array.isArray(ev)) {
+      var position = getPosition(ev); // returns [x-val, y-val]
+      console.log('position: ', position);
+      isCorrect = isRight(position);
+      console.log('correct or not?: ', isCorrect);
+      var elementId = ev.target.id;
+      foundArr = CURRENT_IMG_OBJ['found'];
+      latestFind = foundArr[foundArr.length - 1];  // 1d array
+    }
+    // Executes when correct answer is detected.
     if (isCorrect && !GAME_OVER) {
-      var foundArr = CURRENT_IMG_OBJ['found'];
-      console.log('found arr: ', foundArr);
-      if (foundArr.length > 0) {
+      console.log('array to execute playTurn on: ', foundArr);
+      if (foundArr.length > 0) { // in case user hasn't found any answers yet
         // searches 2d array for the latest 1d array in it
         // foundArr: [lowerX, upperX, lowerY, upperY, centerX, centerY]
-        var latestFind = foundArr[foundArr.length - 1];  // 1d array
         var lowerX = latestFind[0];
         var upperX = latestFind[1];
         var lowerY = latestFind[2];
@@ -151,64 +163,15 @@ $(document).ready(function () {
         }
       }
     }
+    // Executes when wrong choice is detected.
     if (!isCorrect && !GAME_OVER) {
       // play salah sound
       timer('penalty');
-      // USE DRAW CROSS FUNCTION TO DRAW ON THIS POSITION
+      // Draw cross using canvas
       drawAndFadeCross(elementId, position[0], position[1]);
       $('#game-stage').animateCss('headShake');
     }
   }
-
-  // old playTurn
-  // function playTurn (choice) {
-  //   var elementId = '';
-  //   var correctPixelSelected = '';
-  //   if (typeof choice === 'object') { // set up for click event handler
-  //     elementId = choice.target.id;
-  //     correctPixelSelected = isRight(elementId);
-  //   } else if (typeof choice === 'string') { // set up for useClue function
-  //     elementId = choice;
-  //     correctPixelSelected = isRight(elementId);
-  //   }
-  //
-  //   if (correctPixelSelected && !GAME_OVER) {
-  //     $('#' + elementId).addClass('selected-circle');
-  //     dittoClick(elementId); // execute ONLY if choice is right
-  //     incrementScore();
-  //     displayMsg('random');
-  //
-  //     // check whether THIS round is over (5 differences found).
-  //     if (isRoundOver()) {
-  //       console.log('round is over');
-  //       // check if this is the FINAL round
-  //       if (isGameOver('check')) {
-  //         console.log('final round finished');
-  //         isGameOver('won'); // play victory video
-  //       } else if (!isGameOver('check')) {
-  //         // if this is NOT the final round
-  //         console.log('not final round, serving new round');
-  //         displayMsg('Splendid job. Now let\'s move on...');
-  //         timer('stop'); // freeze progress bar
-  //         displayMsg('countdown');
-  //         // reset time, clear board, start new round
-  //         setTimeout(function () {
-  //           TIME_LEFT = 100;
-  //           clearBoard();
-  //           gameRound('new');
-  //           timer('start');
-  //           displayMsg('Don\'t let this simple puzzle beat you, Watson...');
-  //         }, 5000);
-  //       }
-  //     }
-  //   }
-  //   if (!correctPixelSelected && !GAME_OVER) {
-  //     // play salah sound
-  //     timer('penalty');
-  //     $('#' + elementId).animateCss('wrong-cross fadeOut');
-  //     $('#game-stage').animateCss('headShake');
-  //   }
-  // }
 
   function incrementScore () {
     var amt = TIME_LEFT * 50;
@@ -412,22 +375,60 @@ $(document).ready(function () {
     if (ASSIST_CLUE_CREDITS > 0) {
       ASSIST_CLUE_CREDITS--;
       $('#assist-clue').text(ASSIST_CLUE_CREDITS.toString());
+
       // -- Auto select mechanism --
-      var answers = CURRENT_IMG_OBJ.ansCoords;
-      var answerIdNum = 'found'; // number that is a correct answer
-      var index = 0; // used as counter in while loop.
+      // coordsArray[i] is associated directly with areaArray[i]
+      var coordsArray = CURRENT_IMG_OBJ.ansCoords; // 2d array
+      var areaArray = CURRENT_IMG_OBJ.ansArea; // 2d array
+      var choiceCoords = []; // 1d array with coords to right answer
+      var choiceArea = []; // 1d array with area dimensions to right answer
+      var index = 0;
       // loop through answers until it finds one that is yet to be selected by user.
-      while (answerIdNum === 'found') {
-        answerIdNum = answers[index];
-        console.log('answerIdNum computer selected: ', answerIdNum);
-        index++;
+      console.log('coords array length: ', coordsArray.length);
+      for (var i = 0; i < coordsArray.length; i++) {
+        if (coordsArray[i] !== 'found') {
+          choiceCoords = coordsArray[i];
+          choiceArea = areaArray[i];
+          index = i;
+        }
       }
-      // format pixId into something usable by playTurn(choice).
-      var pixId = 'pix-r-' + answerIdNum;
-      // use playTurn to execute the click
-      playTurn(pixId);
+      // format array into something usable by playTurn():
+      // [lowerX, upperX, lowerY, upperY, centerX, centerY]
+      var centerX = choiceCoords[0];
+      var centerY = choiceCoords[1];
+      var lowerX = centerX - choiceArea[0];
+      var upperX = centerX + choiceArea[0];
+      var lowerY = centerY - choiceArea[1];
+      var upperY = centerY + choiceArea[1];
+
+      var arr = [lowerX, upperX, lowerY, upperY, centerX, centerY];
+
+      CURRENT_IMG_OBJ['found'].push(arr); // store in found key of img object
+      CURRENT_IMG_OBJ.ansCoords[index] = 'found'; // leave 'found' marker in answer array
+
+      console.log('useClue decision: ', choiceCoords, choiceArea);
+
+      playTurn(arr);
     }
   }
+
+  //
+  //
+  //     var answers = CURRENT_IMG_OBJ.ansCoords;
+  //     var answerIdNum = 'found'; // number that is a correct answer
+  //     var index = 0; // used as counter in while loop.
+  //     // loop through answers until it finds one that is yet to be selected by user.
+  //     while (answerIdNum === 'found') {
+  //       answerIdNum = answers[index];
+  //       console.log('answerIdNum computer selected: ', answerIdNum);
+  //       index++;
+  //     }
+  //     // format pixId into something usable by playTurn(choice).
+  //     var pixId = 'pix-r-' + answerIdNum;
+  //     // use playTurn to execute the click
+  //     playTurn(pixId);
+  //   }
+  // }
 
   function displayMsg (msg) {
     var randMsg = [
