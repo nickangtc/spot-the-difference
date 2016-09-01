@@ -1,6 +1,7 @@
 body {
   font-size: 2em;
-  background-color: #E4D6A6;
+  /*background-color: #E4D6A6;*/
+  background-image: url('../img/paper_texture.png');
   position: relative;
 }
 canvas {
@@ -38,7 +39,7 @@ canvas {
   background-repeat: no-repeat;
   height: 600px;
   width: 400px;
-  border: 1px black solid;
+  border-radius: 5px;
 }
 .pixel {
   display: inline-block;
@@ -73,11 +74,11 @@ canvas {
   padding-left: 0;
 }
 .cursive-font {
-  font-family: 'Niconne', cursive;
-  font-size: 1.7em;
+  font-family: 'Questrial', sans-serif;
+  font-size: 1.3em;
 }
-.monospace-font {
-  font-family: 'Anonymous Pro', monospace;
+.questrial-font {
+  font-family: 'Questrial', sans-serif;
 }
 
 #ui-bar {
@@ -88,14 +89,24 @@ canvas {
   /*background-color: #449651;*/
 }
 #countdown-timer {
-  font-family: 'Anonymous Pro', monospace;
+  font-family: 'Questrial', sans-serif;
   display: inline-block;
   font-size: 20em;
-  color: white;
+  color: green;
   position: absolute;
   top: 25%;
-  left: 45%;
+  left: 41%;
+  z-index: 1;
 }
 #left-pane {
   position: relative;
+}
+#msg-box {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-image: url('../img/halftone.png');
+  border-radius: 5px;
+  border: 1px solid lightgrey;
 }

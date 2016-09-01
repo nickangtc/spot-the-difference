@@ -341,7 +341,7 @@ $(document).ready(function () {
           $('#time-bar').removeClass('progress-bar-warning progress-bar-success progress-bar-danger');
           $('#time-bar').addClass('progress-bar-success');
         }
-      }, 1000);
+      }, 700);
     } else if (option === 'stop') {
       clearInterval(TIMER_ID);
     } else if (option === 'add') {  // used when user activates assist-time
