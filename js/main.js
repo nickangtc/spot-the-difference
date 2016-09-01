@@ -106,49 +106,39 @@ $(document).ready(function () {
 
     if (Array.isArray(ev)) {
       // executes when user clicks Clue Assist
-      foundArr = ev;
-      isCorrect = true; // ansArr will always be true
       latestFind = ev;
+      isCorrect = true; // ansArr will always be true
       // executes when user clicks on image to try to spot difference
     } else if (typeof ev === 'object' && !Array.isArray(ev)) {
       var position = getPosition(ev); // returns [x-val, y-val]
-      console.log('position: ', position);
       isCorrect = isRight(position);
-      console.log('correct or not?: ', isCorrect);
       var elementId = ev.target.id;
       foundArr = CURRENT_IMG_OBJ['found'];
       latestFind = foundArr[foundArr.length - 1];  // 1d array
     }
     // Executes when correct answer is detected.
     if (isCorrect && !GAME_OVER) {
-      console.log('array to execute playTurn on: ', foundArr);
-      if (foundArr.length > 0) { // in case user hasn't found any answers yet
-        // searches 2d array for the latest 1d array in it
-        // foundArr: [lowerX, upperX, lowerY, upperY, centerX, centerY]
-        var lowerX = latestFind[0];
-        var upperX = latestFind[1];
-        var lowerY = latestFind[2];
-        var upperY = latestFind[3];
-        var centerX = latestFind[4];
-        var centerY = latestFind[5];
-        var width = upperX - lowerX;
-        var height = upperY - lowerY;
-        console.log('ellipse width: ', width, ' height: ', height);
-        console.log('centerX of model answer: ', centerX);
-        console.log('centerY of model answer: ', centerY);
-        drawEllipse('canvas-left', centerX, centerY, width, height);
-        drawEllipse('canvas-right', centerX, centerY, width, height);
-        incrementScore();
-        displayMsg('random');
-      }
+      // searches 2d array for the latest 1d array in it
+      // foundArr: [lowerX, upperX, lowerY, upperY, centerX, centerY]
+      var lowerX = latestFind[0];
+      var upperX = latestFind[1];
+      var lowerY = latestFind[2];
+      var upperY = latestFind[3];
+      var centerX = latestFind[4];
+      var centerY = latestFind[5];
+      var width = upperX - lowerX;
+      var height = upperY - lowerY;
+
+      drawEllipse('canvas-left', centerX, centerY, width, height);
+      drawEllipse('canvas-right', centerX, centerY, width, height);
+      incrementScore();
+      displayMsg('random');
       if (isRoundOver()) {
         // check if this is the FINAL round
         if (isGameOver('final')) {
-          console.log('final round finished');
           isGameOver('won'); // play victory video
         } else if (!isGameOver('final')) {
           // if this is NOT the final round
-          console.log('not final round, serving new round');
           displayMsg('Splendid job. Now let\'s move on...');
           timer('stop'); // freeze progress bar
           displayMsg('countdown');
@@ -190,18 +180,16 @@ $(document).ready(function () {
 
   // checks whether a click is in an undiscovered area.
   function undiscovered (obj, clickX, clickY) {
-    console.log('inside undiscovered func, checking if spot was previously found');
     var arr = obj['found']; // stores 2d array
     for (var i = 0; i < arr.length; i++) {
       if (clickX >= arr[i][0] && clickX <= arr[i][1] && clickY >= arr[i][2] && clickY <= arr[i][3]) {
-        console.log('click within correct range');
         return false; // the click is not undiscovered
       }
     }
-    console.log('click outside range');
     return true; // the click is undiscovered
   }
 
+  // Verifies if a click is within any hot zone.
   function isRight (coords) {
     var clickX = coords[0]; // x-axis value
     var clickY = coords[1]; // y-axis value
@@ -210,26 +198,23 @@ $(document).ready(function () {
 
     // tests for already-rightly-clicked
     if (!undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
-      console.log('already found this spot');
-      return 'already discovered'; // meant to make playTurn() do nothing when returned
+      return 'already discovered'; // make playTurn() do nothing when returned
     } else if (undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
       // check user's click against answers
-      console.log('checking click against answers...');
       for (var i = 0; i < coordsAnswerArr.length; i++) {
         if (typeof coordsAnswerArr[i] !== 'string') {
           var x1 = coordsAnswerArr[i][0] - areaAnswerArr[i][0]; // x lower limit
           var x2 = coordsAnswerArr[i][0] + areaAnswerArr[i][0]; // x upper limit
           var y1 = coordsAnswerArr[i][1] - areaAnswerArr[i][1]; // y lower limit
           var y2 = coordsAnswerArr[i][1] + areaAnswerArr[i][1]; // y upper limit
-          console.log([x1, x2, y1, y2]);
 
-          if (clickX >= x1 && clickX <= x2 && clickY >= y1 && clickY <= y2) { // if within hot zone
-            console.log('click matches answer!');
+          // if within hot zone
+          if (clickX >= x1 && clickX <= x2 && clickY >= y1 && clickY <= y2) {
             var centerX = coordsAnswerArr[i][0];
             var centerY = coordsAnswerArr[i][1];
             CURRENT_IMG_OBJ.ansCoords[i] = 'found'; // leave mark in answer array
+            // push info to 'found' key of image object
             logFound(CURRENT_IMG_OBJ, [x1, x2, y1, y2, centerX, centerY]);
-            console.log('ansCoords arr updated: ', CURRENT_IMG_OBJ.ansCoords);
             return true;
           }
         }
@@ -238,8 +223,8 @@ $(document).ready(function () {
     }
   }
 
-  // returns true if 5 differences have been found
-  // returns false if less than 5
+  // Checks whether current image's differences are all found.
+  // true if 5 differences have been found
   function isRoundOver () {
     var count = 0;
     for (var j = 0; j < CURRENT_IMG_OBJ.ansCoords.length; j++) {
@@ -253,7 +238,7 @@ $(document).ready(function () {
     return false;
   }
 
-  // 3 OPTIONS PARAMETERS
+  // Check if game is over, or set lost/won state.
   // (1) 'CHECK' - RETURNS TRUE IF FINAL ROUND IS OVER
   // (2) 'LOST' - SETS GAME_OVER TO TRUE, UPDATE displayMsg
   // (3) 'WON' - SETS GAME_OVER TO TRUE, CALL victoryVideo
@@ -266,9 +251,7 @@ $(document).ready(function () {
             count++;
           }
         });
-        // no more images AND all
         if (count === CURRENT_IMG_OBJ.ansCoords.length) {
-          console.log('final round gameover detected');
           return true;
         }
       } else {
@@ -300,7 +283,6 @@ $(document).ready(function () {
       // update CURRENT_IMG_OBJ
       var newImgObj = IMAGES[CUR_IMG_IND];
       CURRENT_IMG_OBJ = newImgObj;
-      console.log('new image object: ', newImgObj);
       serveNewImg(newImgObj); // removes old image, adds new one
     }
     if (option === 'check') {
@@ -313,7 +295,6 @@ $(document).ready(function () {
   // Called by gameRound function.
   function serveNewImg (imgObject) {
     // 'img' argument is an object corresponding to current img in play.
-    console.log('img object in serveNewImg: ', imgObject);
     var leftPaneClassList = document.getElementById('left-pane').classList;
     var rightPaneClassList = document.getElementById('right-pane').classList;
     var leftOldImgClass = '';
@@ -339,7 +320,7 @@ $(document).ready(function () {
   }
 
   // 'start' / 'stop' timer
-  // 'add time for time extension
+  // 'add' for time extension when user clicks Time Assist
   function timer (option) {
     if (option === 'start') {
       TIMER_ID = setInterval(function () {
@@ -370,6 +351,7 @@ $(document).ready(function () {
     }
   }
 
+  // Executes when user clicks Clue Assist.
   function useClue () {
     // reduce clue credits
     if (ASSIST_CLUE_CREDITS > 0) {
@@ -384,7 +366,6 @@ $(document).ready(function () {
       var choiceArea = []; // 1d array with area dimensions to right answer
       var index = 0;
       // loop through answers until it finds one that is yet to be selected by user.
-      console.log('coords array length: ', coordsArray.length);
       for (var i = 0; i < coordsArray.length; i++) {
         if (coordsArray[i] !== 'found') {
           choiceCoords = coordsArray[i];
@@ -406,30 +387,12 @@ $(document).ready(function () {
       CURRENT_IMG_OBJ['found'].push(arr); // store in found key of img object
       CURRENT_IMG_OBJ.ansCoords[index] = 'found'; // leave 'found' marker in answer array
 
-      console.log('useClue decision: ', choiceCoords, choiceArea);
-
+      // use playTurn to execute the click on image
       playTurn(arr);
     }
   }
 
-  //
-  //
-  //     var answers = CURRENT_IMG_OBJ.ansCoords;
-  //     var answerIdNum = 'found'; // number that is a correct answer
-  //     var index = 0; // used as counter in while loop.
-  //     // loop through answers until it finds one that is yet to be selected by user.
-  //     while (answerIdNum === 'found') {
-  //       answerIdNum = answers[index];
-  //       console.log('answerIdNum computer selected: ', answerIdNum);
-  //       index++;
-  //     }
-  //     // format pixId into something usable by playTurn(choice).
-  //     var pixId = 'pix-r-' + answerIdNum;
-  //     // use playTurn to execute the click
-  //     playTurn(pixId);
-  //   }
-  // }
-
+  // Pushes message onto the msg display box.
   function displayMsg (msg) {
     var randMsg = [
       'Good call.',
@@ -441,11 +404,9 @@ $(document).ready(function () {
       var cheer = randMsg[randomIntFromInterval(0, randMsg.length - 1)];
       $('#msg-box').text(cheer);
     } else if (msg === 'countdown') {
-      console.log('initiating countdown');
       var count = 5;
 
       var tempTimer = setInterval(function () {
-        console.log('inside new interval timer');
         $('#countdown-timer').text(count.toString()); // display in middle of screen
         count--;
         if (count < 0) {
@@ -457,8 +418,6 @@ $(document).ready(function () {
       $('#msg-box').text(msg);
     }
   }
-
-  // function restart () {}
 
   // CANVAS CONTROL FUNCTIONS
 
@@ -481,22 +440,9 @@ $(document).ready(function () {
     x -= leftOffset;
     y -= topOffset;
 
-    console.log('x: ', x, ' y: ', y);
+    // console.log('x: ', x, ' y: ', y);
 
     return [x, y];
-  }
-
-  // Draws circle on <canvas> elements
-  function drawCircle (id, centerX, centerY, radius) {
-    var canv = document.getElementById(id);
-    var ctx = canv.getContext('2d');
-
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
-
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#A0BA68';
-    ctx.stroke();
   }
 
   // drawCircle('canvas-left', 70, 80, 30);
@@ -506,11 +452,11 @@ $(document).ready(function () {
   function drawEllipse (id, centerX, centerY, width, height) {
     // width spans from left edge to right edge of oval
     // height spans topmost edge to bottom-most edge of oval
-    console.log('drawing ellipse');
-    console.log('centerX: ', centerX);
-    console.log('centerY: ', centerY);
-    console.log('width: ', width);
-    console.log('height: ', height);
+    // console.log('drawing ellipse');
+    // console.log('centerX: ', centerX);
+    // console.log('centerY: ', centerY);
+    // console.log('width: ', width);
+    // console.log('height: ', height);
     var canv = document.getElementById(id);
     var ctx = canv.getContext('2d');
 
@@ -536,6 +482,8 @@ $(document).ready(function () {
   // drawEllipse('canvas-left', 34, 192, 40, 130);
   // drawEllipse('canvas-left', 264, 564, 300, 40);
 
+  // Draws big fat 'X' on clicked coordinates
+  // and clears it after a setTimeout
   function drawAndFadeCross (id, x, y) {
     var can = document.getElementById(id);
     var ctx = can.getContext('2d');
@@ -553,8 +501,6 @@ $(document).ready(function () {
       ctx.clearRect(x - 20, y - 20, 40, 40);
     }, 1000);
   }
-
-  // drawEllipse('canvas-left', 50, 50, 30, 100);
 
   // Clears both canvas completely
   function clearCanvas () {
@@ -580,7 +526,6 @@ $(document).ready(function () {
     }
   });
 
-  // MATH
   // Integrates with Bootstrap modal pop up to show Youtube video.
   function victoryVideo () {
     $('#videoPopUp').modal('show');
@@ -593,6 +538,7 @@ $(document).ready(function () {
     });
   }
 
+  // MATH
   function randomIntFromInterval (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
