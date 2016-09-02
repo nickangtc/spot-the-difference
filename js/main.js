@@ -75,7 +75,6 @@ $(document).ready(function () {
   // --- INITALISE GAME ---
 
   // CLICK LISTENERS
-
   // Click listeners for left and right image canvas
   document.getElementById('canvas-left').addEventListener('click', playTurn, false);
   document.getElementById('canvas-right').addEventListener('click', playTurn, false);
@@ -97,9 +96,8 @@ $(document).ready(function () {
   timer('start');
 
   // !--- GAME LOGIC ---! //
-
-  // ---- Main control-flow function ----
-  // executes when any pixel is clicked.
+  // ---- playTurn is the main control-flow function ----
+  // Executes when any part of image canvas is clicked.
   function playTurn (ev) {
     var isCorrect = false;
     var foundArr = [];
@@ -181,7 +179,7 @@ $(document).ready(function () {
   }
 
   // checks whether a click is in an undiscovered area.
-  function undiscovered (obj, clickX, clickY) {
+  function isUndiscovered (obj, clickX, clickY) {
     var arr = obj['found']; // stores 2d array
     for (var i = 0; i < arr.length; i++) {
       if (clickX >= arr[i][0] && clickX <= arr[i][1] && clickY >= arr[i][2] && clickY <= arr[i][3]) {
@@ -199,9 +197,9 @@ $(document).ready(function () {
     var areaAnswerArr = CURRENT_IMG_OBJ.ansArea; // [[x-width, y-height]...]
 
     // tests for already-rightly-clicked
-    if (!undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+    if (!isUndiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
       return 'already discovered'; // make playTurn() do nothing when returned
-    } else if (undiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+    } else if (isUndiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
       // check user's click against answers
       for (var i = 0; i < coordsAnswerArr.length; i++) {
         if (typeof coordsAnswerArr[i] !== 'string') {
@@ -441,8 +439,8 @@ $(document).ready(function () {
       leftOffset = document.getElementById('right-pane').offsetLeft;
       topOffset = document.getElementById('right-pane').offsetTop;
     }
-    var x = ev.x;
-    var y = ev.y;
+    var x = ev.x; // x-position of click on viewport (not canvas)
+    var y = ev.y; // y-position of click on viewport
 
     x -= leftOffset;
     y -= topOffset;
@@ -457,13 +455,6 @@ $(document).ready(function () {
   // Draws oval shape on <canvas> elements
   // (modified from: http://bit.ly/2bBPWHm)
   function drawEllipse (id, centerX, centerY, width, height) {
-    // width spans from left edge to right edge of oval
-    // height spans topmost edge to bottom-most edge of oval
-    // console.log('drawing ellipse');
-    // console.log('centerX: ', centerX);
-    // console.log('centerY: ', centerY);
-    // console.log('width: ', width);
-    // console.log('height: ', height);
     var canv = document.getElementById(id);
     var ctx = canv.getContext('2d');
 
