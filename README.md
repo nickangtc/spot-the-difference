@@ -1,6 +1,6 @@
 # Spot the difference
 
-A web version of the classic arcade Spot the Difference game. 
+A web version of the classic Spot the Difference arcade game. 
 
 Created as first individual project at General Assembly’s Web Development Immersive course.
 
