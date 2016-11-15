@@ -3,7 +3,7 @@
 $(document).ready(function () {
 
   var TIMER_ID = '';
-  var TIME_LEFT = 1000;
+  var TIME_LEFT = 99;
   var GAME_OVER = false;
   var CUR_IMG_IND = 0;
   var SCORE = 0;
