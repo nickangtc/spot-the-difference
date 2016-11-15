@@ -294,7 +294,7 @@ $(document).ready(function () {
       clearInterval(TIMER_ID);
     } else if (option === 'add') {  // used when user activates assist-time
       TIME_LEFT += 10;
-    } else if (option === 'penalty') { // when user selects wrong pixel
+    } else if (option === 'penalty') { // when user selects wrong spot
       TIME_LEFT -= 6;
     }
   }
