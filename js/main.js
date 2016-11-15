@@ -398,8 +398,8 @@ $(document).ready(function () {
       centerX - width / 2, centerY - height / 2, // CP top left
       centerX, centerY - height / 2); // startpoint top
 
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = '#A0BA68';
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#74C374';
     ctx.stroke();
   }
 
@@ -412,6 +412,10 @@ $(document).ready(function () {
   function drawAndFadeCross (id, x, y) {
     var can = document.getElementById(id);
     var ctx = can.getContext('2d');
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = '#E03A4A';
+
+    ctx.beginPath();
 
     ctx.moveTo(x - 20, y - 20);
     ctx.lineTo(x + 20, y + 20);
@@ -423,7 +427,7 @@ $(document).ready(function () {
 
     // clear the cross 1 sec after it appears
     setTimeout(function () {
-      ctx.clearRect(x - 20, y - 20, 45, 45);
+      ctx.clearRect(x - 21, y - 21, 42, 42);
     }, 1000);
   }
 
