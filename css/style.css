@@ -1,4 +1,5 @@
 body {
+  height: 100vh;
   font-size: 2em;
   /*background-color: #E4D6A6;*/
   background-image: url('../img/paper_texture.png');
@@ -7,6 +8,8 @@ body {
 canvas {
   position: absolute;
   left: 0;
+  width: 100%;
+  height: 100%;
   /* z-index to make canvas layer appear below span grids */
   z-index: 1;
 }
@@ -38,9 +41,10 @@ canvas {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  height: 600px;
-  width: 400px;
+  height: 527px;
+  width: 675px;
   border-radius: 5px;
+  outline: 3px solid red;
 }
 .pixel {
   display: inline-block;
@@ -64,16 +68,23 @@ canvas {
   background-repeat: no-repeat;
 }
 
-/* Modifying Bootstrap */
-/*.row.no-gutter {
-  margin-left: 0;
-  margin-right: 0;
+#dashboard.container.restrict-height {
+  min-height: 23vh;
 }
-.row.no-gutter [class*='col-']:not(:first-child),
-.row.no-gutter [class*='col-']:not(:last-child) {
-  padding-right: 0;
-  padding-left: 0;
-}*/
+
+#images-area.container.restrict-height {
+  min-height: 77vh;
+}
+
+/* Modifying BOOTSTRAP */
+.row {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.row.row-centered {
+  float: none;
+  margin: 0 auto;
+}
 .cursive-font {
   font-family: 'Questrial', sans-serif;
   font-size: 1.3em;
@@ -82,13 +93,13 @@ canvas {
   font-family: 'Questrial', sans-serif;
 }
 
-#ui-bar {
+/*#ui-bar {
   background-color: #A0BA68;
   padding-top: 1.5%;
   padding-bottom: 0.3%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-}
+}*/
 #game-stage {
 
 }

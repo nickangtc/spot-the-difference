@@ -4,6 +4,7 @@ console.log('javascript working');
 
 $(document).ready(function () {
   console.log('DOM loaded');
+
   var TIMER_ID = '';
   var TIME_LEFT = 99;
   var GAME_OVER = false;
@@ -12,65 +13,10 @@ $(document).ready(function () {
   var ASSIST_TIME_CREDITS = 3;
   var ASSIST_CLUE_CREDITS = 3;
 
-  var img1 = {
-    ansCoords: [  // right answer LOCUS
-      [360, 86],  // [x, y] zeroed coordinates
-      [106, 331],
-      [12, 299],
-      [34, 192],
-      [264, 564]
-    ],
-    ansArea: [  // right answer AREA
-      [25, 25], // [x-radius, y-radius]
-      [20, 20],
-      [20, 20],
-      [20, 65],
-      [150, 20]
-    ],
-    cssClass: 'img1',
-    found: [] // will receive arrays of found areas from logFound()
-  };
-  var img2 = {
-    ansCoords: [  // right answer LOCUS
-      [368, 392],  // [x, y] zeroed coordinates
-      [283, 395],
-      [34, 379],
-      [346, 429],
-      [134, 192]
-    ],
-    ansArea: [  // right answer AREA
-      [10, 10], // [x-radius, y-radius]
-      [32, 32],
-      [75, 75],
-      [18, 18],
-      [55, 30]
-    ],
-    cssClass: 'img2',
-    found: [] // will receive arrays of found areas from logFound()
-  };
-  var img3 = {
-    ansCoords: [  // right answer LOCUS
-      [185, 467],  // [x, y] zeroed coordinates
-      [78, 462],
-      [303, 189],
-      [253, 357],
-      [297, 574]
-    ],
-    ansArea: [  // right answer AREA
-      [25, 25], // [x-radius, y-radius]
-      [30, 30],
-      [50, 50],
-      [100, 60],
-      [50, 20]
-    ],
-    cssClass: 'img3',
-    found: [] // will receive arrays of found areas from logFound()
-  };
-
-  // Stores all previously the above img objects.
+  // Stores all answer objects (see answers.js)
   var IMAGES = [img1, img2, img3];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
-  var CURRENT_IMG_OBJ = gameRound('check'); // stores answers for current round.
+  var CUR_IMG_IN_PLAY = gameRound('check'); // stores answers for current round.
 
   // --- INITALISE GAME ---
 
@@ -103,8 +49,8 @@ $(document).ready(function () {
     var foundArr = [];
     var latestFind = [];  // 1d array
 
+    // executes when user clicks Clue Assist
     if (Array.isArray(ev)) {
-      // executes when user clicks Clue Assist
       latestFind = ev;
       isCorrect = true; // ansArr will always be true
       // executes when user clicks on image to try to spot difference
@@ -112,10 +58,10 @@ $(document).ready(function () {
       var position = getPosition(ev); // returns [x-val, y-val]
       isCorrect = isRight(position);
       var elementId = ev.target.id;
-      foundArr = CURRENT_IMG_OBJ['found'];
+      foundArr = CUR_IMG_IN_PLAY['found'];
       latestFind = foundArr[foundArr.length - 1];  // 1d array
     }
-    // Executes when correct answer is detected.
+    // executes when correct answer is detected.
     if (isCorrect && !GAME_OVER) {
       // searches 2d array for the latest 1d array in it
       // foundArr: [lowerX, upperX, lowerY, upperY, centerX, centerY]
@@ -153,7 +99,7 @@ $(document).ready(function () {
         }
       }
     }
-    // Executes when wrong choice is detected.
+    // executes when wrong choice is detected.
     if (!isCorrect && !GAME_OVER) {
       timer('penalty');
       // Draw cross using canvas
@@ -193,13 +139,13 @@ $(document).ready(function () {
   function isRight (coords) {
     var clickX = coords[0]; // x-axis value
     var clickY = coords[1]; // y-axis value
-    var coordsAnswerArr = CURRENT_IMG_OBJ.ansCoords; // [[x, y], [x, y]...]
-    var areaAnswerArr = CURRENT_IMG_OBJ.ansArea; // [[x-width, y-height]...]
+    var coordsAnswerArr = CUR_IMG_IN_PLAY.ansCoords; // [[x, y], [x, y]...]
+    var areaAnswerArr = CUR_IMG_IN_PLAY.ansArea; // [[x-width, y-height]...]
 
     // tests for already-rightly-clicked
-    if (!isUndiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+    if (!isUndiscovered(CUR_IMG_IN_PLAY, clickX, clickY)) {
       return 'already discovered'; // make playTurn() do nothing when returned
-    } else if (isUndiscovered(CURRENT_IMG_OBJ, clickX, clickY)) {
+    } else if (isUndiscovered(CUR_IMG_IN_PLAY, clickX, clickY)) {
       // check user's click against answers
       for (var i = 0; i < coordsAnswerArr.length; i++) {
         if (typeof coordsAnswerArr[i] !== 'string') {
@@ -212,9 +158,9 @@ $(document).ready(function () {
           if (clickX >= x1 && clickX <= x2 && clickY >= y1 && clickY <= y2) {
             var centerX = coordsAnswerArr[i][0];
             var centerY = coordsAnswerArr[i][1];
-            CURRENT_IMG_OBJ.ansCoords[i] = 'found'; // leave mark in answer array
+            CUR_IMG_IN_PLAY.ansCoords[i] = 'found'; // leave mark in answer array
             // push info to 'found' key of image object
-            logFound(CURRENT_IMG_OBJ, [x1, x2, y1, y2, centerX, centerY]);
+            logFound(CUR_IMG_IN_PLAY, [x1, x2, y1, y2, centerX, centerY]);
             return true;
           }
         }
@@ -227,8 +173,8 @@ $(document).ready(function () {
   // true if 5 differences have been found
   function isRoundOver () {
     var count = 0;
-    for (var j = 0; j < CURRENT_IMG_OBJ.ansCoords.length; j++) {
-      if (CURRENT_IMG_OBJ.ansCoords[j] === 'found') {
+    for (var j = 0; j < CUR_IMG_IN_PLAY.ansCoords.length; j++) {
+      if (CUR_IMG_IN_PLAY.ansCoords[j] === 'found') {
         count++;
       }
     }
@@ -246,12 +192,12 @@ $(document).ready(function () {
     if (option === 'final') { // returns true if final round is over
       if (IMAGES.length - 1 === 0) { // no more images to play
         var count = 0;
-        CURRENT_IMG_OBJ.ansCoords.forEach(function (el, ind, arr) {
+        CUR_IMG_IN_PLAY.ansCoords.forEach(function (el, ind, arr) {
           if (el === 'found') {
             count++;
           }
         });
-        if (count === CURRENT_IMG_OBJ.ansCoords.length) {
+        if (count === CUR_IMG_IN_PLAY.ansCoords.length) {
           return true;
         }
       } else {
@@ -280,9 +226,9 @@ $(document).ready(function () {
       // BRING ON THE NEW
       // randomly select new image to serve
       CUR_IMG_IND = randomIntFromInterval(0, IMAGES.length - 1);
-      // update CURRENT_IMG_OBJ
+      // update CUR_IMG_IN_PLAY
       var newImgObj = IMAGES[CUR_IMG_IND];
-      CURRENT_IMG_OBJ = newImgObj;
+      CUR_IMG_IN_PLAY = newImgObj;
       serveNewImg(newImgObj); // removes old image, adds new one
     }
     if (option === 'check') {
@@ -326,7 +272,6 @@ $(document).ready(function () {
       TIMER_ID = setInterval(function () {
         var percentage = TIME_LEFT + '%';
         $('#time-bar').css('width', percentage);
-        $('#time-digits').text(TIME_LEFT);
         TIME_LEFT--;
         if (TIME_LEFT < 0) { // TIME'S UP - GAME OVER!
           clearInterval(TIMER_ID);
@@ -364,8 +309,8 @@ $(document).ready(function () {
 
       // -- Auto select mechanism --
       // coordsArray[i] is associated directly with areaArray[i]
-      var coordsArray = CURRENT_IMG_OBJ.ansCoords; // 2d array
-      var areaArray = CURRENT_IMG_OBJ.ansArea; // 2d array
+      var coordsArray = CUR_IMG_IN_PLAY.ansCoords; // 2d array
+      var areaArray = CUR_IMG_IN_PLAY.ansArea; // 2d array
       var choiceCoords = []; // 1d array with coords to right answer
       var choiceArea = []; // 1d array with area dimensions to right answer
       var index = 0;
@@ -388,8 +333,8 @@ $(document).ready(function () {
 
       var arr = [lowerX, upperX, lowerY, upperY, centerX, centerY];
 
-      CURRENT_IMG_OBJ['found'].push(arr); // store in found key of img object
-      CURRENT_IMG_OBJ.ansCoords[index] = 'found'; // leave 'found' marker in answer array
+      CUR_IMG_IN_PLAY['found'].push(arr); // store in found key of img object
+      CUR_IMG_IN_PLAY.ansCoords[index] = 'found'; // leave 'found' marker in answer array
 
       // use playTurn to execute the click on image
       playTurn(arr);
@@ -496,7 +441,7 @@ $(document).ready(function () {
 
     // clear the cross 1 sec after it appears
     setTimeout(function () {
-      ctx.clearRect(x - 20, y - 20, 40, 40);
+      ctx.clearRect(x - 20, y - 20, 45, 45);
     }, 1000);
   }
 

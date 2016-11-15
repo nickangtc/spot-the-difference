@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="css/font-awesome-4.6.3/css/font-awesome.min.css" charset="utf-8">
   <link rel="stylesheet" href="css/animate.css" charset="utf-8">
   <link rel="stylesheet" href="css/style.css" charset="utf-8">
-  <script src="js/jquery-3.1.0.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <script src="js/external/jquery-3.1.0.min.js"></script>
+  <script src="js/external/bootstrap.min.js"></script>
+  <script src="js/answers.js"></script>
   <script src="js/main.js"></script>
 
 </head>
@@ -18,52 +19,62 @@
 <!-- BOOTSTRAP OPTIMISED FOR 'SM' DEVICES AND ABOVE ONLY! -->
 <body>
 
-  <!-- NAV BAR -->
-  <div class="container text-center">
-    <div id="ui-bar" class="row">
-      <div id="score-ui" class="col-sm-2 questrial-font">00000</div>
-      <div id="time-bar-ui" class="col-sm-6">
+  <!-- ============ FANCY UI ACTION AREA ============ -->
+
+  <!-- Current score | game logo | highscore + Time assist icons -->
+  <div id="dashboard" class="container-fluid text-center restrict-height">
+    <div class="row">
+      <div id="score-ui" class="col-sm-4 questrial-font text-left">00000</div>
+      <div id="logo" class="col-sm-4">Pic Hunto</div>
+      <div id="highscore" class="col-sm-4 text-right">
+        <div class="questrial-font">
+          36550
+        </div>
+        <div id="assist-time">
+          <img src="img/icon-time.png" alt="time icon" />
+          <span class="questrial-font">3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time countdown bar | Clue assist icons -->
+    <div class="row">
+      <div class="col-sm-9">
         <div class="progress">
           <div id="time-bar" class="progress-bar progress-bar-success progress-bar-striped active" style="width: 100%;" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
-      <div id="time-digits" class="col-sm-1 questrial-font">99</div>
-      <div class="col-sm-1 col-sm-offset-1">
+      <div class="col-sm-3 text-right">
         <span id="assist-clue">
           <img src="img/icon-find.png" alt="clue icon" />
           <span class="questrial-font">3</span>
         </span>
       </div>
-      <div class="col-sm-1">
-        <span id="assist-time">
-          <img src="img/icon-time.png" alt="time icon" />
-          <span class="questrial-font">3</span>
-        </span>
-      </div>
     </div>
 
-    <!-- MESSAGE BOX -->
-    <div class="row text-center">
-      <div id="msg-box" class="col-sm-6 col-sm-offset-3 cursive-font">Spot the difference!</div>
-    </div>
+  </div><!-- /.container-fluid#dashboard -->
 
-  </div>
 
-  <div class="container">
-    <!-- DIVIDED GAMEPLAY AREA (left-pane, right-pane) -->
-    <!-- DO NOT CHANGE ID NAMES - strong dependencies in JS -->
-    <div id="game-stage" class="row no-gutter">
+  <!-- MESSAGE BOX -->
+  <!-- <div class="row text-center">
+    <div id="msg-box" class="col-sm-6 col-sm-offset-3 cursive-font">Spot the difference!</div>
+  </div> -->
+
+
+  <!-- ============ GAMEPLAY AREA ============ -->
+  <div id="images-area" class="container-fluid restrict-height">
+    <!-- Area divided into | left-pane | right-pane | -->
+    <div id="game-stage" class="row row-centered text-center">
       <!-- Left Picture Pane -->
-
       <!-- Do not add to 'left-pane' any class name containing 'img' -->
       <!-- // it will screw up 'doImg' function in main.js -->
-      <div id="left-pane" class="col-sm-4 col-sm-offset-2 tight-fit img1a">
-        <canvas id="canvas-left" width="400" height="600"></canvas>
+      <div id="left-pane" class="col-sm-6 tight-fit img1a">
+        <canvas id="canvas-left" width="675" height="527"></canvas>
       </div>
 
       <!-- Right Picture Pane -->
-      <div id="right-pane" class="col-sm-4 tight-fit img1b">
-        <canvas id="canvas-right" width="400" height="600"></canvas>
+      <div id="right-pane" class="col-sm-6 tight-fit img1b">
+        <canvas id="canvas-right" width="675" height="527"></canvas>
       </div>
 
       <div id="countdown-timer" class="animated infinite pulse"></div>
