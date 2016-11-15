@@ -16,7 +16,7 @@ $(document).ready(function () {
   // Stores all answer objects (see answers.js)
   var IMAGES = [img1, img2, img3];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
-  var CUR_IMG_IN_PLAY = gameRound('check'); // stores answers for current round.
+  var CUR_IMG_IN_PLAY = gameplayRound('check'); // stores answers for current round.
 
   // --- INITALISE GAME ---
 
@@ -92,7 +92,7 @@ $(document).ready(function () {
           setTimeout(function () {
             TIME_LEFT += 15;
             clearCanvas();
-            gameRound('new');
+            gameplayRound('new');
             timer('start');
             displayMsg('One more coming your way...');
           }, 5000);
@@ -118,7 +118,7 @@ $(document).ready(function () {
   // Pushes info of newly discovered answer into 'found' key in img object
   // info:
   // called by isRight() function
-  function logFound (obj, areaArr) {
+  function logAnswer (obj, areaArr) {
     // areaArr format: [lowerX, upperX, lowerY, upperY, centerX, centerY]
     var target = obj;
     target['found'].push(areaArr); // store array in obj key 'found'
@@ -160,7 +160,7 @@ $(document).ready(function () {
             var centerY = coordsAnswerArr[i][1];
             CUR_IMG_IN_PLAY.ansCoords[i] = 'found'; // leave mark in answer array
             // push info to 'found' key of image object
-            logFound(CUR_IMG_IN_PLAY, [x1, x2, y1, y2, centerX, centerY]);
+            logAnswer(CUR_IMG_IN_PLAY, [x1, x2, y1, y2, centerX, centerY]);
             return true;
           }
         }
@@ -217,7 +217,7 @@ $(document).ready(function () {
   // 2 options to manipulate images -
   // (1) 'new': retires old image and serves new one on DOM.
   // (2) 'check': returns current in-play image object.
-  function gameRound (option) {
+  function gameplayRound (option) {
     if (option === 'new') {
       // DEALING WITH THE OLD - Update javascript variables:
       var oldImgObj = IMAGES[CUR_IMG_IND];
@@ -238,7 +238,7 @@ $(document).ready(function () {
   }
 
   // Updates DOM with new image for a new round.
-  // Called by gameRound function.
+  // Called by gameplayRound function.
   function serveNewImg (imgObject) {
     // 'img' argument is an object corresponding to current img in play.
     var leftPaneClassList = document.getElementById('left-pane').classList;
@@ -377,6 +377,7 @@ $(document).ready(function () {
     var paneId = ev.target.id;
     var leftOffset;
     var topOffset;
+    // Obtain coords of left or right pane, measured from top left of window
     if (paneId.includes('left')) {
       leftOffset = document.getElementById('left-pane').offsetLeft;
       topOffset = document.getElementById('left-pane').offsetTop;
@@ -384,12 +385,18 @@ $(document).ready(function () {
       leftOffset = document.getElementById('right-pane').offsetLeft;
       topOffset = document.getElementById('right-pane').offsetTop;
     }
+    // Check and compensate for user's browser scrollTop value
+    if (document.body.scrollTop) {
+      topOffset -= document.body.scrollTop;
+    }
+
     var x = ev.x; // x-position of click on viewport (not canvas)
     var y = ev.y; // y-position of click on viewport
 
     x -= leftOffset;
     y -= topOffset;
 
+    // Uncomment this to get answer coordinates of new game pictures
     // console.log('x: ', x, ' y: ', y);
 
     return [x, y];
