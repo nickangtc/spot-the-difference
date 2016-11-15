@@ -102,14 +102,17 @@ h3.game-font {
   margin: 0 auto;
 }
 #countdown-timer {
-  font-family: 'Questrial', sans-serif;
   display: inline-block;
-  font-size: 20em;
+  font-size: 18em;
   color: green;
   position: absolute;
   top: 25%;
-  left: 41%;
+  left: 30%;
   z-index: 1;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 15px 2px black, 0 0 10px black;
+  border-radius: 0.6em;
+  width: 40%;
 }
 #left-pane {
   margin-right: 10px;
@@ -117,15 +120,6 @@ h3.game-font {
 /*#right-pane {
   margin-left: 10px;
 }*/
-#msg-box {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-image: url('../img/halftone.png');
-  border-radius: 5px;
-  border: 1px solid lightgrey;
-}
 
 
 /* ===== BOOTSTRAP ===== */
@@ -133,8 +127,6 @@ h3.game-font {
   padding-top: 7px;
 }
 .game-font {
-  /*font-family: 'Questrial', sans-serif;*/
-  /*font-family: 'Chela One', cursive;*/
   font-family: 'Chango', cursive;
 }
 .progress {

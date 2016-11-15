@@ -1,9 +1,6 @@
 /* global $ */
 
-console.log('javascript working');
-
 $(document).ready(function () {
-  console.log('DOM loaded');
 
   var TIMER_ID = '';
   var TIME_LEFT = 1000;
@@ -33,8 +30,6 @@ $(document).ready(function () {
       timer('add');
       ASSIST_TIME_CREDITS--;
       $(this).fadeOut();
-    } else if (ASSIST_TIME_CREDITS === 0) {
-      displayMsg('Most curious, the time machine failed!');
     }
   });
 
@@ -53,7 +48,7 @@ $(document).ready(function () {
     if (Array.isArray(ev)) {
       latestFind = ev;
       isCorrect = true; // ansArr will always be true
-      // executes when user clicks on image to try to spot difference
+    // executes when user clicks on image to try to spot difference
     } else if (typeof ev === 'object' && !Array.isArray(ev)) {
       var position = getPosition(ev); // returns [x-val, y-val]
       isCorrect = isRight(position);
@@ -77,24 +72,20 @@ $(document).ready(function () {
       drawEllipse('canvas-left', centerX, centerY, width, height);
       drawEllipse('canvas-right', centerX, centerY, width, height);
       incrementScore();
-      displayMsg('random');
       document.getElementById('right-fx').play();
       if (isRoundOver()) {
         // check if this is the FINAL round
         if (isGameOver('final')) {
           isGameOver('won'); // play victory video
         } else if (!isGameOver('final')) {
-          // if this is NOT the final round
-          displayMsg('Splendid job. Now let\'s move on...');
-          timer('stop'); // freeze progress bar
-          displayMsg('countdown');
+          timer('stop'); // freeze time bar
+          initiateCountdown();
           // reset time, clear board, start new round
           setTimeout(function () {
             TIME_LEFT += 15;
             clearCanvas();
             gameplayRound('new');
             timer('start');
-            displayMsg('One more coming your way...');
           }, 5000);
         }
       }
@@ -186,8 +177,8 @@ $(document).ready(function () {
 
   // Check if game is over, or set lost/won state.
   // (1) 'CHECK' - RETURNS TRUE IF FINAL ROUND IS OVER
-  // (2) 'LOST' - SETS GAME_OVER TO TRUE, UPDATE displayMsg
-  // (3) 'WON' - SETS GAME_OVER TO TRUE, CALL victoryVideo
+  // (2) 'LOST' - SETS GAME_OVER TO TRUE
+  // (3) 'WON' - SETS GAME_OVER TO TRUE, CALL playVictoryVideo
   function isGameOver (option) {
     if (option === 'final') { // returns true if final round is over
       if (IMAGES.length - 1 === 0) { // no more images to play
@@ -204,13 +195,12 @@ $(document).ready(function () {
         return false;
       }
     } else if (option === 'lost') {
-      displayMsg('Game over. :( Refresh to try again!');
       GAME_OVER = true;
     } else if (option === 'won') {
       // pop up window w/ 2 options: (1) restart (2) cancel
       GAME_OVER = true;
       clearInterval(TIMER_ID);
-      victoryVideo();
+      playVictoryVideo();
     }
   }
 
@@ -223,14 +213,11 @@ $(document).ready(function () {
       var oldImgObj = IMAGES[CUR_IMG_IND];
       IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
       IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
-      console.log('unplayed images:', IMAGES);
-      console.log('images played:', IMAGES_PLAYED);
       // BRING ON THE NEW
       // randomly select new image to serve
       CUR_IMG_IND = randomIntFromInterval(0, IMAGES.length - 1);
       // update CUR_IMG_IN_PLAY
       var newImgObj = IMAGES[CUR_IMG_IND];
-      console.log('new image served:', newImgObj);
       CUR_IMG_IN_PLAY = newImgObj;
       serveNewImg(newImgObj); // removes old image, adds new one
     }
@@ -345,31 +332,16 @@ $(document).ready(function () {
   }
 
   // Pushes message onto the msg display box.
-  function displayMsg (msg) {
-    var randMsg = [
-      'Good call.',
-      'Very astute, Watson.',
-      'Have you considered becoming a detective?',
-      'Ooh I didn\'t even see that!'
-    ];
-    if (msg === 'random') {
-      // select from an array of possible messages.
-      var cheer = randMsg[randomIntFromInterval(0, randMsg.length - 1)];
-      $('#msg-box').text(cheer);
-    } else if (msg === 'countdown') {
-      var count = 5;
-
-      var tempTimer = setInterval(function () {
-        $('#countdown-timer').text(count.toString()); // display in middle of screen
-        count--;
-        if (count < 0) {
-          clearInterval(tempTimer);
-          $('#countdown-timer').text('');
-        }
-      }, 1000);
-    } else {
-      $('#msg-box').text(msg);
-    }
+  function initiateCountdown () {
+    var count = 5;
+    var tempTimer = setInterval(function () {
+      $('#countdown-timer').text(count.toString()); // display in middle of screen
+      count--;
+      if (count < 0) {
+        clearInterval(tempTimer);
+        $('#countdown-timer').text('');
+      }
+    }, 1000);
   }
 
   // CANVAS CONTROL FUNCTIONS
@@ -400,7 +372,7 @@ $(document).ready(function () {
     y -= topOffset;
 
     // Uncomment this to get answer coordinates of new game pictures
-    console.log('x: ', x, ' y: ', y);
+    // console.log('x: ', x, ' y: ', y);
 
     return [x, y];
   }
@@ -480,7 +452,7 @@ $(document).ready(function () {
   });
 
   // Integrates with Bootstrap modal pop up to show Youtube video.
-  function victoryVideo () {
+  function playVictoryVideo () {
     $('#videoPopUp').modal('show');
     var vidUrl = 'https://www.youtube.com/embed/JPBRbIvs5lc?autoplay=1';
     $('#videoPopUp').find('iframe').attr('src', vidUrl);
