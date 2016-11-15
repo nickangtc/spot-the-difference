@@ -7,7 +7,7 @@ This was the first individual project I did as a student at General Assembly.
 ### v0.1 screenshot September 2016
 ![nickang game v0.1 screenshot](spot-the-difference.png)
 
-### v0.2 gameplay September 2016
+### v0.2 gameplay November 2016
 
 ![nickang game v0.2 screenshot](http://i.giphy.com/3o7TKDTFUX3CPFdNqE.gif)
 
