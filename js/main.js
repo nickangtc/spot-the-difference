@@ -6,7 +6,7 @@ $(document).ready(function () {
   console.log('DOM loaded');
 
   var TIMER_ID = '';
-  var TIME_LEFT = 99;
+  var TIME_LEFT = 1000;
   var GAME_OVER = false;
   var CUR_IMG_IND = 0;
   var SCORE = 0;
@@ -26,13 +26,13 @@ $(document).ready(function () {
   document.getElementById('canvas-right').addEventListener('click', playTurn, false);
 
   // Click listeners for Assist buttons
-  $('#assist-clue').on('click', useClue);
-  $('#assist-time').on('click', function () {
+  $('#assist-clue img').on('click', useClue);
+  $('#assist-time img').on('click', function () {
     if (ASSIST_TIME_CREDITS > 0) {
       document.getElementById('time-fx').play();
       timer('add');
       ASSIST_TIME_CREDITS--;
-      $('#assist-time').children('span').text(ASSIST_TIME_CREDITS.toString());
+      $(this).fadeOut();
     } else if (ASSIST_TIME_CREDITS === 0) {
       displayMsg('Most curious, the time machine failed!');
     }
@@ -304,7 +304,7 @@ $(document).ready(function () {
     // reduce clue credits
     if (ASSIST_CLUE_CREDITS > 0) {
       ASSIST_CLUE_CREDITS--;
-      $('#assist-clue').children('span').text(ASSIST_CLUE_CREDITS.toString());
+      $(this).fadeOut();
       document.getElementById('clue-fx').play();
 
       // -- Auto select mechanism --

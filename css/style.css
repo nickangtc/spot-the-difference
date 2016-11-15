@@ -13,7 +13,9 @@ canvas {
   /* z-index to make canvas layer appear below span grids */
   z-index: 1;
 }
-
+h3.game-font {
+  margin-top: 5px;
+}
 /**************/
 /* GAMEPLAY IMAGES START */
 .img1a {
@@ -67,41 +69,38 @@ canvas {
   background-size: contain;
   background-repeat: no-repeat;
 }
-
-#dashboard.container.restrict-height {
-  min-height: 23vh;
+.icon {
+  max-width: 2.5em;
 }
 
-#images-area.container.restrict-height {
-  min-height: 77vh;
+#dashboard.restrict-height {
+  min-height: 30vh;
 }
 
-/* Modifying BOOTSTRAP */
-.row {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.row.row-centered {
-  float: none;
-  margin: 0 auto;
-}
-.cursive-font {
-  font-family: 'Questrial', sans-serif;
-  font-size: 1.3em;
-}
-.questrial-font {
-  font-family: 'Questrial', sans-serif;
+#images-area.restrict-height {
+  min-height: 70vh;
 }
 
-/*#ui-bar {
-  background-color: #A0BA68;
-  padding-top: 1.5%;
-  padding-bottom: 0.3%;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}*/
+.score-ui {
+  border: 1px solid black;
+  border-radius: 0.6em;
+  padding: 0.3em 0.5em;
+  margin-bottom: 1em;
+  background: rgb(224, 58, 74);
+  box-shadow: inset 0 0 15px 2px black, 0 0 5px black;
+}
+.score-ui.dark {
+  background: rgb(100, 100, 100);
+  color: white;
+}
+
+#highscore {
+  color: yellow;
+}
+
+
 #game-stage {
-
+  margin: 0 auto;
 }
 #countdown-timer {
   font-family: 'Questrial', sans-serif;
@@ -114,7 +113,6 @@ canvas {
   z-index: 1;
 }
 #left-pane {
-  position: relative;
   margin-right: 10px;
 }
 /*#right-pane {
@@ -128,4 +126,25 @@ canvas {
   background-image: url('../img/halftone.png');
   border-radius: 5px;
   border: 1px solid lightgrey;
+}
+
+
+/* ===== BOOTSTRAP ===== */
+.row {
+  padding-top: 7px;
+}
+.game-font {
+  /*font-family: 'Questrial', sans-serif;*/
+  /*font-family: 'Chela One', cursive;*/
+  font-family: 'Chango', cursive;
+}
+.progress {
+  height: 50px;
+  border-radius: 0.6em;
+  border: 2px solid black;
+  box-shadow: inset 0 0 15px 2px black, 0 0 5px black;
+}
+#time-bar {
+  border-radius: 0.6em;
+  box-shadow: inset 0 0 15px black, 0 0 20px black;
 }

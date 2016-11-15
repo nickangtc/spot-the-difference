@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <title>Spot the difference!</title>
   <link href="https://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Chango" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Chela+One" rel="stylesheet"> -->
   <link rel="stylesheet" href="css/bootstrap.min.css" charset="utf-8">
   <link rel="stylesheet" href="css/font-awesome-4.6.3/css/font-awesome.min.css" charset="utf-8">
   <link rel="stylesheet" href="css/animate.css" charset="utf-8">
@@ -24,30 +26,44 @@
   <!-- Current score | game logo | highscore + Time assist icons -->
   <div id="dashboard" class="container-fluid text-center restrict-height">
     <div class="row">
-      <div id="score-ui" class="col-sm-4 questrial-font text-left">00000</div>
-      <div id="logo" class="col-sm-4">Pic Hunto</div>
-      <div id="highscore" class="col-sm-4 text-right">
-        <div class="questrial-font">
+      <div class="col-sm-3 game-font text-left">
+        <h3 class="game-font">
+          Your score
+        </h3>
+        <div id="score-ui" class="score-ui dark">
+          00000
+        </div>
+      </div>
+      <div id="logo" class="col-sm-6">
+        <img src="img/logo.png" alt="pic hunto" style="width:100%;" />
+      </div>
+      <div class="col-sm-3 text-right">
+        <h3 class="game-font">
+          Highscore
+        </h3>
+        <div id="highscore" class="game-font score-ui">
           36550
         </div>
         <div id="assist-time">
-          <img src="img/icon-time.png" alt="time icon" />
-          <span class="questrial-font">3</span>
+          <img class="icon" src="img/icon-time.png" alt="time icon" />
+          <img class="icon" src="img/icon-time.png" alt="time icon" />
+          <img class="icon" src="img/icon-time.png" alt="time icon" />
         </div>
       </div>
     </div>
 
     <!-- Time countdown bar | Clue assist icons -->
     <div class="row">
-      <div class="col-sm-9">
+      <div class="col-sm-10">
         <div class="progress">
           <div id="time-bar" class="progress-bar progress-bar-success progress-bar-striped active" style="width: 100%;" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
-      <div class="col-sm-3 text-right">
+      <div class="col-sm-2 text-right">
         <span id="assist-clue">
-          <img src="img/icon-find.png" alt="clue icon" />
-          <span class="questrial-font">3</span>
+          <img class="icon" src="img/icon-find.png" alt="clue icon" />
+          <img class="icon" src="img/icon-find.png" alt="clue icon" />
+          <img class="icon" src="img/icon-find.png" alt="clue icon" />
         </span>
       </div>
     </div>
@@ -57,14 +73,14 @@
 
   <!-- MESSAGE BOX -->
   <!-- <div class="row text-center">
-    <div id="msg-box" class="col-sm-6 col-sm-offset-3 cursive-font">Spot the difference!</div>
+    <div id="msg-box" class="col-sm-6 col-sm-offset-3">Spot the difference!</div>
   </div> -->
 
 
   <!-- ============ GAMEPLAY AREA ============ -->
-  <div id="images-area" class="container-fluid restrict-height">
+  <div id="images-area" class="container-fluid text-center restrict-height">
     <!-- Area divided into | left-pane | right-pane | -->
-    <div id="game-stage" class="row row-centered text-center">
+    <div id="game-stage" class="row">
       <!-- Left Picture Pane -->
       <!-- Do not add to 'left-pane' any class name containing 'img' -->
       <!-- // it will screw up 'doImg' function in main.js -->
@@ -79,24 +95,24 @@
 
       <div id="countdown-timer" class="animated infinite pulse"></div>
 
-      <!-- Bootstrap Modal for youtube pop up -->
-      <div class="modal fade" id="videoPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content questrial-font">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Nice job.</h4>
-            </div>
-            <div class="modal-body">
-              <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal for youtube pop up -->
+  <div class="modal fade" id="videoPopUp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content game-font">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Nice job.</h4>
+        </div>
+        <div class="modal-body">
+          <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-
     </div>
   </div>
 
