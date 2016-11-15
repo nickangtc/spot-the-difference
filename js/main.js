@@ -14,7 +14,7 @@ $(document).ready(function () {
   var ASSIST_CLUE_CREDITS = 3;
 
   // Stores all answer objects (see answers.js)
-  var IMAGES = [img1, img2, img3];
+  var IMAGES = [img1, img2, img3, img4, img5];
   var IMAGES_PLAYED = []; // img objects popped here after each round.
   var CUR_IMG_IN_PLAY = gameplayRound('check'); // stores answers for current round.
 
@@ -223,11 +223,14 @@ $(document).ready(function () {
       var oldImgObj = IMAGES[CUR_IMG_IND];
       IMAGES_PLAYED.push(oldImgObj); // add old img to played array.
       IMAGES.splice(CUR_IMG_IND, 1); // remove old img from unserved array.
+      console.log('unplayed images:', IMAGES);
+      console.log('images played:', IMAGES_PLAYED);
       // BRING ON THE NEW
       // randomly select new image to serve
       CUR_IMG_IND = randomIntFromInterval(0, IMAGES.length - 1);
       // update CUR_IMG_IN_PLAY
       var newImgObj = IMAGES[CUR_IMG_IND];
+      console.log('new image served:', newImgObj);
       CUR_IMG_IN_PLAY = newImgObj;
       serveNewImg(newImgObj); // removes old image, adds new one
     }
@@ -397,7 +400,7 @@ $(document).ready(function () {
     y -= topOffset;
 
     // Uncomment this to get answer coordinates of new game pictures
-    // console.log('x: ', x, ' y: ', y);
+    console.log('x: ', x, ' y: ', y);
 
     return [x, y];
   }
